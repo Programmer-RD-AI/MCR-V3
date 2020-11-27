@@ -1,0 +1,24 @@
+# Admin #
+# Become a Teacher
+# Become a Student
+# Accept Students *lATER*
+# CRUD Marks
+# Change Passwords
+
+
+
+# Teacher #
+# CRUD Notices
+# Messaging *Dont work*
+# CRUD Notes
+# Messaging
+# Add Marks
+
+
+
+# Student #
+# Get Marks
+# Messaging *Dont work*
+# Get Notes
+# Get Notices
+# Settings
