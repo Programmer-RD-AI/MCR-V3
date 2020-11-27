@@ -7,7 +7,7 @@ db = cluster["DB"]
 c = ["i", "yu"]
 for i in c:
     collection = db['']
-    collection.insert_one({"ffs": ""})
+    collection.insert_one({"": ""})
     collection.delete_many({})
 results = db.collection_names()
 print(results)

@@ -66,10 +66,45 @@ class Teacher:
         except:
             return False
 
-    def update_teacher(self, new_info: list, user_name: str, email: str):
+    @staticmethod
+    def get_data_of_teacher(user_name, email):
         try:
             results = []
-            
+            for result in auth_collection_sign_in.find(
+                {"User Name": user_name, "Email": email}
+            ):
+                results.append(result)
+            if result == []:
+                return [False, result]
+            return [True, result]
+        except:
+            return False
+
+    def update_teacher(self, new_info: dict, old_info: dict):
+        try:
+            results = []
+            if new_info["Role"] is "Student":
+                new = {
+                    "$set": {
+                        "User Name": new_info["User Name"],
+                        "Password": new_info["Password"],
+                        "Email": new_info["Email"],
+                        "Role": new_info["Role"],
+                    }
+                }
+                self.subject_collection.delete_one(old_info)
+            else:
+                new = {
+                    "$set": {
+                        "User Name": new_info["User Name"],
+                        "Password": new_info["Password"],
+                        "Email": new_info["Email"],
+                        "Role": new_info["Role"],
+                        "Subject": new_info["Subject"],
+                    }
+                }
+            auth_collection_sign_in.update_one(old_info, new)
+            return True
         except:
             return False
 
@@ -80,20 +115,44 @@ class Teacher:
         for result_subjects in subject_collection.find({}):
             results_subjects.append(result_subjects)
         results_user = []
-        for result_user in results_user.find({}):
+        for result_user in auth_collection_sign_in.find({"Role": "Teacher"}):
             results_user.append(result_user)
         return [results_user, results_subjects]
 
 
 class Students:
-    def __init__(self):
-        pass
+    def __init__(self, user_name, password, email):
+        self.user_name = user_name
+        self.password = password
+        self.email = email
 
     def __repr__(self):
         return "Teacher"
 
     def add_student(self):
-        pass
+        try:
+            si1 = Sign_In(
+                user_name=self.user_name,
+                password_or_email=self.password,
+                role="Student",
+            )
+            si2 = Sign_In(
+                user_name=self.user_name, password_or_email=self.email, role="Student"
+            )
+            results = [si1.check(), si2.check()]
+            if results[0][0] is False and results[1][0] is False:
+                return [False, "There is another student with the same info ! "]
+            auth_collection_sign_in.insert_one(
+                {
+                    "User Name": self.user_name,
+                    "Password": self.password,
+                    "Email": self.email,
+                    "Role": "Student",
+                }
+            )
+            return [True, "New Student Created ! "]
+        except:
+            return [False, "An Error Occurred ! "]
 
     def delete_student(self):
         pass

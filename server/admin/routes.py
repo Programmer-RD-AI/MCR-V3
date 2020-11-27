@@ -110,6 +110,10 @@ def admin_crud_teacher(user_name, email):
     try:
         user_name = json.load(user_name)
         email = json.load(email)
+        t = Teacher(user_name="", password="", email="")
+        result = t.get_data_of_teacher()
+        if result[0] is False:
+            return abort(404)
         conditions = [
             "Auth" in session,
             "User Name" in session,
@@ -124,6 +128,22 @@ def admin_crud_teacher(user_name, email):
                 new_password = request.form["P"]
                 new_email = request.form["E"]
                 new_subject = request.form["S"]
+                new_role = request.form["R"]
+                result = t.update_teacher(
+                    new_info={
+                        "User Name": new_user_name,
+                        "Password": new_password,
+                        "Email": new_email,
+                        "Role": new_role,
+                        "Subject": new_subject,
+                    },
+                    old_info=result[1][0],
+                )
+                if result:
+                    flash("Teacher info updated ! ", "success")
+                    return redirect("/Admin/")
+                flash("An error Occured ! ", "danger")
+                return redirect("/Admin/")
             else:
                 return render_template(
                     "/admin/u_users.html",
@@ -140,6 +160,43 @@ def admin_crud_teacher(user_name, email):
 @app.route("/Admin/CRUD/Students/")
 def admin_crud_student():
     try:
+        conditions = [
+            "Auth" in session,
+            "User Name" in session,
+            "Password or Email" in session,
+            "Role" in session,
+            session["Role"] == "Admin",
+            "Returned Data" in session,
+        ]
+        if all(conditions):
+            if request.method == "POST":
+                user_name = request.form["UN"]
+                password = request.form["P"]
+                email = request.form["E"]
+                s = Students()
+                result = s.add_student(
+                    user_name=user_name, password=password, email=email
+                )
+                print(result)
+                flash(result, "success")
+                return redirect("/Admin")
+            else:
+                return render_template(
+                    "/admin/crud_users.html", type_of_crud_user="Student"
+                )
+        return abort(404)
+    except:
+        return abort(505)
+
+
+@app.route("/Admin/CRUD/Student/Update/<string:user_name>/<string:email>")
+@app.route("/Admin/CRUD/Student/Update/<string:user_name>/<string:email>/")
+@app.route("/Admin/CRUD/Students/Update/<string:user_name>/<string:email>")
+@app.route("/Admin/CRUD/Students/Update/<string:user_name>/<string:email>/")
+def admin_crud_student():
+    try:
+        user_name = json.load(user_name)
+        
         conditions = [
             "Auth" in session,
             "User Name" in session,
