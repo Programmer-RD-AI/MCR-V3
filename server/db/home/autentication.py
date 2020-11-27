@@ -57,7 +57,7 @@ class Sign_In:
             self.check_user_name_and_password(),
         ]
         if results[0] is True or results[1] is True:
-            self.send_email("Wrong............", "fdsfsdfd")
+            self.send_email("Wrong............", "No !!")
             return [True,results]
         else:
             return False

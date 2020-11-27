@@ -1,3 +1,1 @@
-{
-  "MongoDB-Client-Url": "mongodb+srv://Ranuga:Ranuga2008@cluster.9bjkf.mongodb.net/<dbname>?retryWrites=true&w=majority"
-}
+{"MongoDB-Client-Url": "mongodb+srv://Ranuga:Ranuga2008@cluster0.s7lud.mongodb.net/<dbname>?retryWrites=true&w=majority"}

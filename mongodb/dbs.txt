@@ -1,0 +1,5 @@
+
+user_db = cluster["Auth"]
+auth_collection_sign_in = user_db["Auth-Sign-In"]
+
+subject_db = cluster["Subjects"]
