@@ -1,6 +1,7 @@
 from server import *
 from server.db.admin.crud_users import *
 from server.db.admin.crud_subjects import *
+from server.db.notices import *
 from server import session
 import base64
 
@@ -8,20 +9,17 @@ import base64
 @app.route("/Admin/")
 @app.route("/Admin")
 def admin_home():
-    try:
-        conditions = [
-            "Auth" in session,
-            "User Name" in session,
-            "Password or Email" in session,
-            "Role" in session,
-            "Returned Data" in session,
-            session["Role"] == "Admin",
-        ]
-        if all(conditions):
-            return render_template("/admin/home.html")
-        return abort(404)
-    except:
-        return abort(505)
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+        session["Role"] == "Admin",
+    ]
+    if all(conditions):
+        return render_template("/admin/home.html")
+    return abort(404)
 
 
 @app.route("/Admin/Log/Out")
@@ -624,3 +622,71 @@ def encode_data(message):
     message_bytes = message.encode("ascii")
     base64_message = base64.b64encode(message_bytes).decode("ascii")
     return base64_message
+
+
+@app.route("/Admin/CRD/Notices", methods=["POST", "GET"])
+@app.route("/Admin/CRD/Notices/", methods=["POST", "GET"])
+@app.route("/Admin/CRD/Notice", methods=["POST", "GET"])
+@app.route("/Admin/CRD/Notice/", methods=["POST", "GET"])
+def crd_notices():
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        session["Role"] == "Admin",
+        "Returned Data" in session,
+    ]
+    if all(conditions):
+        if request.method == "POST":
+            title = request.form["T"]
+            description = request.form["D"]
+            result = add_notice(title=title, description=description)
+            if result is True:
+                flash("New Notice added ! ", "success")
+                return redirect("/Admin/CRD/Notices")
+            flash("An error occured ! ", "danger")
+            return redirect("/Admin/CRD/Notices")
+        else:
+            notices = get_notices()
+            return render_template("/admin/crd_notices.html", notices=notices)
+    return abort(404)
+
+
+@app.route(
+    "/Admin/CRD/Notices/Delete/<string:title>/<string:description>",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/CRD/Notices/Delete/<string:title>/<string:description>/",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/CRD/Notice/Delete/<string:title>/<string:description>",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/CRD/Notice/Delete/<string:title>/<string:description>/",
+    methods=["POST", "GET"],
+)
+def crd_notices_delete(title, description):
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        session["Role"] == "Admin",
+        "Returned Data" in session,
+    ]
+    if all(conditions):
+        if request.method == "POST":
+            result = delete_notice(title=title, description=description)
+            if result is True:
+                flash("Deleted Notice ! ", "success")
+                return redirect("/Admin/CRD/Notices")
+            else:
+                flash("An error occured ! ", "danger")
+                return redirect(f"/Admin/CRD/Notices/Delete/{title}/{description}")
+        else:
+            return render_template("/admin/d_notice.html", title=title)
+    return abort(404)

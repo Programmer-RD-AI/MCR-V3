@@ -1,5 +1,5 @@
 from server import *
-
+from server.db.notices import *
 
 @app.route("/Teacher")
 @app.route("/Teacher/")
@@ -19,21 +19,13 @@ def teacher():
     except:
         return abort(505)
 
-
-@app.route("/Teacher/CRD/Notices")
-@app.route("/Teacher/CRD/Notices/")
-def crd_notices_teacher():
+@app.route('/Teacher/Log/Out')
+@app.route('/Teacher/Log/Out/')
+def teacher_log_out():
     try:
-        conditions = [
-            "Auth" in session,
-            "User Name" in session,
-            "Password or Email" in session,
-            "Role" in session,
-            "Returned Data" in session,
-            session["Role"] == "Teacher",
-        ]
-        if all(conditions):
-            return render_template("/teacher/cr_notices.html")
-        return abort(404)
+        pop = ["Auth", "User Name", "Password", "Role", "Returned Data"]
+        for poper in pop:
+            session.pop(poper, None)
+        return redirect("/")
     except:
         return abort(505)

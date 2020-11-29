@@ -1,0 +1,15 @@
+{% extends '/teacher/base.html' %}
+{% block head %}
+<title>Student Notices</title>
+{% endblock %}
+{% block body %}
+<div class="container">
+    {% for notice in notices %}
+    <div class="jumbotron">
+        <h1><b>{{ notice['Title'] }}</b></h1>
+        <h3><b>{{ notice['Description'] }}</b></h3>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% endblock %}
