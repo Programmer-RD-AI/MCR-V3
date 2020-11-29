@@ -1,0 +1,27 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Crud Subjects</title>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+        <br>
+        <form method="POST">
+            <div class="form-group">
+                <label for="subject_name">Subject Name</label>
+                <input required name="S" placeholder="Subject Name" type="text" class="form-control" id="subject_name">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Subject</button>
+        </form>
+        <br>
+    </div>
+    {% for final_ in final %}
+    <br>
+    <div class="jumbotron" style="color:black;">
+        <h1>{{ final_[0] }}</h1>
+        <a href="/Admin/CRUD/Subjects/Update/{{ final_[1] }}" class="btn btn-primary">Update</a>
+        <a href="/Admin/CRUD/Subjects/Delete/{{ final_[1] }}" class="btn btn-danger">Delete</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

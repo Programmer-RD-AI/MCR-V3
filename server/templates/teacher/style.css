@@ -1,0 +1,19 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    background-color: gray !important;
+    color: white !important;
+}
+
+.footer {
+    position: fixed !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    background-color: gray !important;
+    color: white !important;
+    text-align: center !important;
+}
+
+.jumbotron {
+    color: black !important;
+}

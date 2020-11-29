@@ -1,0 +1,23 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Update Subject</title>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+        <form method="POST">
+            <div class="form-group">
+                <label for="subject_name">New Subject Name. (Old Name : {{ old_name }})</label>
+                <input name="S" type="text" class="form-control" id="subject_name" placeholder="New Subject"
+                    value="{{ old_name }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+    <h3>
+        <b>
+            All teachers who have the subject will be updated
+        </b>
+    </h3>
+</div>
+{% endblock %}

@@ -23,7 +23,6 @@ class Sign_In:
             }
         ):
             results.append(result)
-        print(f"\n \n User Name and Password Results : {results} \n \n ")
         if results == []:
             return False
         return True
@@ -43,24 +42,15 @@ class Sign_In:
             return False
         return True
 
-    def send_email(self, subject, message):
-        try:
-            mail = Mailer(email="go2ranuga@gmail.com", password="ranuga d 2008")
-            mail.send(receiver=self.email, subject=subject, message=message)
-            return True
-        except:
-            return False
-
     def check(self):
         results = [
             self.check_user_name_and_email(),
             self.check_user_name_and_password(),
         ]
-        if results[0] is True or results[1] is True:
-            self.send_email("Wrong............", "No !!")
-            return [True,results]
+        if results[0] is False and results[1] is False:
+            return [False, results]
         else:
-            return False
+            return [True, results]
 
     def __repr__(self):
         return " - ! Sign In ! - "

@@ -1,3 +1,4 @@
 {
     "git.ignoreLimitWarning": true
 }
+[[[{'_id': 1, 'User Name': 'Ranuga', 'Password': 'Ranuga', 'Email': 'Ranuga', 'Role': 'Teacher', 'Subject': 'A'}], ['A', [{'_id': 0, 'User Name': 'Ranuga', 'Password': 'Ranuga', 'Email': 'Ranuga', 'Role': 'Teacher', 'Subject': 'A'}]]]]

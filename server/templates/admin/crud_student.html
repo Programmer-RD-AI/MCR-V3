@@ -1,0 +1,42 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Crud Students</title>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+        <br>
+        <form method="POST">
+            <div class="form-group">
+                <label for="user_name">User Name</label>
+                <input required name="UN" placeholder="User Name" type="text" class="form-control" id="user_name">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input required name="P" placeholder="Password" type="text" class="form-control" id="password">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input required name="E" placeholder="Email" type="text" class="form-control" id="email">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Student</button>
+        </form>
+        <br>
+    </div>
+    {% for student in students %}
+    <br>
+    <div class="jumbotron" style="color:black;">
+        <hr>
+        <h1>User Name : {{ student[0]['User Name'] }} <br> Password : {{ student[0]['Password'] }} <br> Email :
+            {{ student[0]['Email']  }}</h1>
+        <hr>
+        <a href="/Admin/CRUD/Student/Update/{{ student[1]['User Name'] }}/{{ student[1]['Email'] }}"
+            class="btn btn-primary">Update</a>
+        <a href="/Admin/CRUD/Student/Delete/{{ student[1]['User Name'] }}/{{ student[1]['Email'] }}"
+            class="btn btn-danger">Delete</a>
+        <hr>
+    </div>
+    {% endfor %}
+    <a href="/Admin/CRUD/Teacher" class="btn btn-primary">Create Teacher(s)</a>
+</div>
+{% endblock %}

@@ -1,13 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404</title>
-</head>
-<body style="background-color: gray;">
+{% extends '/home/base.html' %}
+{% block head %}
+<title>
+    500 go brrrrrrrrrrrrrrrr....
+</title>
+{% endblock %}
+{% block body %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% for link in links %}
+<br>
 <center>
-    <img src="https://www.howtogeek.com/wp-content/uploads/2018/09/what-is-a-504-error-header.jpg" alt="">
+    <img src="{{ link }}" alt="{{ link }}" width="500px" />
 </center>
-</body>
-</html>
+<br>
+{% endfor %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% endblock %}

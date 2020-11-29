@@ -1,0 +1,117 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Home</title>
+<style>
+    .card {
+        display: inline-block !important;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <center>
+        <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+            <div class="card-header">
+                <h1> Welcome Back Admin ! </h1>
+            </div>
+        </div>
+        <br>
+        <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+            <div class="card-header">Quick Access</div>
+            <div class="card-body">
+                <a href="/Admin/Log/Out"" class=" btn btn-outline-secondary"> Log Out </a>
+                <br>
+                <a href="/Admin/CRUD/Student"" class=" btn btn-outline-secondary">CRUD Student(s)</a>
+                <br>
+                <a href="/Admin/CRUD/Teacher"" class=" btn btn-outline-secondary">CRUD Teacher(s)</a>
+                <br>
+                <a href="/Admin/CRUD/Subject"" class=" btn btn-outline-secondary">CRUD Subject(s)</a>
+                <br>
+            </div>
+        </div>
+        <br>
+        <h2>
+            What you can do.
+        </h2>
+        <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+            <div class="card-header">CRUD(Create,Read,Update,Delete) Students</div>
+            <div class="card-body">
+                <a href="/Admin/CRUD/Students" class="btn btn-outline-secondary">CRUD Students</a>
+            </div>
+        </div>
+        <br>
+        <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+            <div class="card-header">Steps</div>
+            <div class="card-body">
+                <br>
+                <hr>
+                <h5 class="card-title">Steps in making a subject</h5>
+                <p class="card-text">You can click the button below to check it out or you can click the small button
+                    like
+                    link in the top navbar.</p>
+                <p class="card-text">When you go there you should see a blank page with a form to fill you can fill the
+                    input and hit enter then the subject will be created for you. then there will some cards like things
+                    in
+                    the bottom of the form then there is two buttons</p>
+                <br>
+                <hr>
+            </div>
+        </div>
+        <br>
+        <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+            <div class="card-header">Steps</div>
+            <div class="card-body">
+                <br>
+                <hr>
+                <h5 class="card-title">Steps in making a teacher</h5>
+                <p class="card-text">You can click the button below to check it out or you can click the small button
+                    like
+                    link in the top navbar.</p>
+                <p class="card-text">When you go there you should see a blank page with a form to fill you can fill the
+                    input and hit enter then the subject will be created for you. then there will some cards like things
+                    in
+                    the bottom of the form then there is two buttons</p>
+                <br>
+                <hr>
+            </div>
+        </div>
+        <br>
+        <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+            <div class="card-header">Steps</div>
+            <div class="card-body">
+                <br>
+                <hr>
+                <h5 class="card-title">Steps in making a student</h5>
+                <p class="card-text">You can click the button below to check it out or you can click the small button
+                    like
+                    link in the top navbar.</p>
+                <p class="card-text">When you go there you should see a blank page with a form to fill you can fill the
+                    input and hit enter then the subject will be created for you. then there will some cards like things
+                    in
+                    the bottom of the form then there is two buttons</p>
+                <br>
+                <hr>
+            </div>
+        </div>
+        <br>
+        <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+            <div class="card-header">Steps</div>
+            <div class="card-body">
+                <br>
+                <hr>
+                <h5 class="card-title">Steps in making a logout</h5>
+                <p class="card-text">You can click the button below to check it out or you can click the small button
+                    like
+                    link in the top navbar.</p>
+                <p class="card-text">When you go there you should see a blank page with a form to fill you can fill the
+                    input and hit enter then the subject will be created for you. then there will some cards like things
+                    in
+                    the bottom of the form then there is two buttons</p>
+                <br>
+                <hr>
+            </div>
+        </div>
+        <br>
+    </center>
+</div>
+{% endblock %}

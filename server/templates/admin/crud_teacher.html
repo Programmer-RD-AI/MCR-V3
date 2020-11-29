@@ -1,0 +1,52 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Crud Students</title>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+    <br>
+    <form method="POST">
+        <div class="form-group">
+            <label for="user_name">User Name</label>
+            <input required name="UN" placeholder="User Name" type="text" class="form-control" id="user_name">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input required name="P" placeholder="Password" type="text" class="form-control" id="password">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input required name="E" placeholder="Email" type="text" class="form-control" id="email">
+        </div>
+        <div class="form-group">
+            <label for="inputState">Subject</label>
+            <select name="S" id="inputState" class="form-control">
+                <option selected>None</option>
+                {% for subject in subjects %}
+                <option>{{ subject }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Teacher</button>
+    </form>
+    <br>
+</div>
+    {% for teacher in teachers %}
+    <br>
+    <div class="jumbotron" style="color:black;">
+        <hr>
+        <h1> <br> User Name : {{ teacher[0]['User Name'] }} <br> Password : {{ teacher[0]['Password'] }}
+            <br>
+            Email : {{ teacher[0]['Email'] }} <br> Subject : {{ teacher[0]['Subject'] }} </h1>
+        <hr>
+        <a href="/Admin/CRUD/Teacher/Update/{{ teacher[-1]['User Name'] }}/{{ teacher[-1]['Email'] }}"
+            class="btn btn-primary">Update</a>
+        <a href="/Admin/CRUD/Teacher/Delete/{{ teacher[-1]['User Name'] }}/{{ teacher[-1]['Email'] }}"
+            class="btn btn-danger">Delete</a>
+        <hr>
+    </div>
+    {% endfor %}
+    <a href="/Admin/CRUD/Students" class="btn btn-primary">Create Student(s)</a>
+</div>
+{% endblock %}
