@@ -20,7 +20,6 @@ def home():
 @app.route("/Sign/In", methods=["POST", "GET"])
 @app.route("/Sign/In/", methods=["POST", "GET"])
 def sign_in():
-    try:
         if request.method == "POST":
             user_name = request.form["UN"]
             password_or_email = request.form["PE"]
@@ -49,6 +48,4 @@ def sign_in():
                 )
             return redirect("/")
         else:
-            return render_template("/home/sign_in.html")
-    except:
-        return abort(505)
+            return render_template('/home/sign_in.html')

@@ -1,0 +1,37 @@
+{% extends '/teacher/base.html' %}
+{% block head %}
+<title>Student Home</title>
+<style>
+    a {
+        text-decoration: none !important;
+        color: white !important;
+    }
+    .card {
+        background-color: lightgray !important;
+    }
+    a:hover {
+        color: black !important;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+    {% for result in results %}
+    <div class="row row-cols-1 row-cols-md-3">
+        <div class="col mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <center>
+                        <a class="card-title" href="/Student/Class/{{ result }}">
+                            <h2><b>{{ result }}</b></h2>
+                        </a>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+</div>
+{% endblock %}
