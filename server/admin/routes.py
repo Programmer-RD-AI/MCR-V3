@@ -15,10 +15,10 @@ def admin_home():
         "Password or Email" in session,
         "Role" in session,
         "Returned Data" in session,
-        session["Role"] == "Admin",
     ]
     if all(conditions):
-        return render_template("/admin/home.html")
+        if session["Role"] == "Admin":
+            return render_template("/admin/home.html")
     return abort(404)
 
 
@@ -675,18 +675,19 @@ def crd_notices_delete(title, description):
         "User Name" in session,
         "Password or Email" in session,
         "Role" in session,
-        session["Role"] == "Admin",
         "Returned Data" in session,
     ]
     if all(conditions):
-        if request.method == "POST":
-            result = delete_notice(title=title, description=description)
-            if result is True:
-                flash("Deleted Notice ! ", "success")
-                return redirect("/Admin/CRD/Notices")
+        if session["Role"] == "Admin":
+            if request.method == "POST":
+                result = delete_notice(title=title, description=description)
+                if result is True:
+                    flash("Deleted Notice ! ", "success")
+                    return redirect("/Admin/CRD/Notices")
+                else:
+                    flash("An error occured ! ", "danger")
+                    return redirect(f"/Admin/CRD/Notices/Delete/{title}/{description}")
             else:
-                flash("An error occured ! ", "danger")
-                return redirect(f"/Admin/CRD/Notices/Delete/{title}/{description}")
-        else:
-            return render_template("/admin/d_notice.html", title=title)
+                return render_template("/admin/d_notice.html", title=title)
+        return abort(404)
     return abort(404)
