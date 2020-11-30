@@ -5,7 +5,7 @@ from get_the_last_id import *
 
 def get_link():
     with open(
-        "/home/ranuga/Programming/Projects/Python/Flask/Doing/My-Class-Room-V2/private/mongodb-client.json"
+        "/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/private/mongodb-client.json"
     ) as json_info:
         info = json.load(json_info)
     return info["MongoDB-Client-Url"]

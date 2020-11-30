@@ -114,7 +114,7 @@ class Teacher:
                     "Role": new_info["Role"],
                 }
             }
-            subject_collection = subject_db[old_info['Subject']]
+            subject_collection = subject_db[old_info["Subject"]]
             subject_collection.delete_one(old_info)
         else:
             new = {
@@ -126,6 +126,8 @@ class Teacher:
                     "Subject": new_info["Subject"],
                 }
             }
+        print(old_info)
+        print(new)
         auth_collection_sign_in.update_one(old_info, new)
         return True
 

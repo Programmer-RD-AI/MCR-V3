@@ -197,16 +197,18 @@ def admin_crud_update_teacher(user_name, email):
                 if new_subject != "None":
                     flash("Please select the subject as None ! ", "danger")
                     return redirect("/Admin/CRUD/Teacher")
-                result = t.update_teacher(
+                print(result)
+                result_ = t.update_teacher(
                     new_info={
                         "User Name": new_user_name,
                         "Password": new_password,
                         "Email": new_email,
                         "Role": new_role,
                     },
-                    old_info=result[1],
+                    old_info=result[1][0],
                 )
-                if result is False:
+                print(result_)
+                if result_ is False:
                     flash(
                         "There is another user with the same info or an error occured !",
                         "danger",
@@ -223,6 +225,7 @@ def admin_crud_update_teacher(user_name, email):
                     },
                     old_info=result[1],
                 )
+                print(result)
                 if result is False:
                     flash(
                         "There is another user with the same info or an error occured !",
@@ -246,9 +249,9 @@ def admin_crud_update_teacher(user_name, email):
             return render_template(
                 "/admin/u_teacher.html",
                 subjects=result,
-                email=info[1]["Email"],
-                password=info[1]["Password"],
-                user_name=info[1]["User Name"],
+                email=info[1][0]["Email"],
+                password=info[1][0]["Password"],
+                user_name=info[1][0]["User Name"],
             )
     return abort(404)
 
