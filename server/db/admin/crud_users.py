@@ -128,7 +128,10 @@ class Teacher:
             }
         print(old_info)
         print(new)
-        auth_collection_sign_in.update_one(old_info, new)
+        try:
+            auth_collection_sign_in.update_one(old_info[0], new)
+        except:
+            auth_collection_sign_in.update_one(old_info, new)
         return True
 
     @staticmethod

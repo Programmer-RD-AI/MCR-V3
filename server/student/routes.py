@@ -21,7 +21,6 @@ def student_home():
         return render_template("/student/home.html", results=results)
     return abort(404)
 
-
 @app.route("/Student/Log/Out")
 @app.route("/Student/Log/Out/")
 def log_out_student():
@@ -58,7 +57,8 @@ def student_notices():
             session["Role"] == "Student",
         ]
         if all(conditions):
-            return render_template("/student/student_notices.html")
+            info = get_notices()
+            return render_template("/student/student_notices.html",notices=info)
         return abort(404)
     except:
         return abort(505)

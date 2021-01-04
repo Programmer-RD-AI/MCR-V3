@@ -261,7 +261,6 @@ def admin_crud_update_teacher(user_name, email):
 @app.route("/Admin/CRUD/Students", methods=["POST", "GET"])
 @app.route("/Admin/CRUD/Students/", methods=["POST", "GET"])
 def admin_crud_student():
-    try:
         conditions = [
             "Auth" in session,
             "User Name" in session,
@@ -302,8 +301,6 @@ def admin_crud_student():
                 print(final)
                 return render_template("/admin/crud_student.html", students=final)
         return abort(404)
-    except:
-        return abort(505)
 
 
 @app.route(

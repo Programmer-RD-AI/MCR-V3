@@ -1,0 +1,12 @@
+Home
+Tech used
+Github
+Sign in with usernamee and password and email
+CRUD Subjects
+CRUD Teachers
+CRUD Students
+Tell the other stuff
+Give examples of using this
+Sign in as student
+Sign in as Teacher
+Show the code.
