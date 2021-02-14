@@ -1,0 +1,34 @@
+{% extends "student/base.html" %}
+{% block head %}
+<title>
+    File
+</title>
+<style>
+    .jumbotron {
+        color: black !important;
+    }
+
+    .card {
+        color: black !important;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <br>
+    {% for file in files %}
+    <div class="jumbotron">
+        <h4><b>File Name : {{file['filename']}}</b></h4>
+        <h4><b>Description : {{file['desc']}}</b></h4>
+        <h4><b>File Owner Category : {{file['file_type_name']}}</b></h4>
+        <a href="/Student/File/{{file_type}}/{{file['filename']}}/{{file['desc']}}/Download"
+            class="btn btn-primary">Download</a>
+        <br>
+        <br>
+        <a href="/Student/File/{{file_type}}/{{file['filename']}}/{{file['desc']}}/View"
+            class="btn btn-primary">View</a>
+    </div>
+    {% endfor %}
+    <br>
+</div>
+{% endblock %}

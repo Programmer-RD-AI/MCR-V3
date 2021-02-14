@@ -3,7 +3,8 @@ from flask_restful import *
 from pymongo import *
 import json
 from firebase import firebase
-
+from application import *
+from applications import *
 
 def get_link():
     with open(
@@ -14,7 +15,7 @@ def get_link():
 
 
 # Configing the web application
-app = Flask(__name__)
+app = application
 app.debug = True
 app.secret_key = "--568963558fgdg85fbfd/8gf6bed8fgf6dbhde9rfg5sdf96eyhgr96f5hr9ehr--Ranuga D 2008--568963558fgdg85fbfd/8gf6bed8fgf6dbhde9rfg5sdf96eyhgr96f5hr9ehr--"
 api = Api(app)

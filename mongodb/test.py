@@ -1,19 +1,19 @@
 from pymongo import *
+import base64
+import bson
+from bson.binary import Binary
 
 cluster = MongoClient(
-    "mongodb+srv://Ranuga:Ranuga2008@cluster0.s7lud.mongodb.net/<dbname>?retryWrites=true&w=majority"
+    "mongodb+srv://Ranuga:Ranuga2008@cluster0.xgqas.mongodb.net/<dbname>?retryWrites=true&w=majority"
 )
-db = cluster["DB"]
-c = ["i", "yu"]
-for i in c:
-    collection = db['']
-    collection.insert_one({"": ""})
-    collection.delete_many({})
-results = db.collection_names()
-print(results)
-collection.drop()
-results = db.collection_names()
-print(results)
+db = cluster["test"]
+collectin = db["test"]
+with open(f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/mongodb/get_the_last_id.py", "rb") as f:
+    encoded = Binary(f.read())
+collectin.insert_one({'test':encoded,'file':'get_the_last_id.py'})
+results = []
+for result in collectin.find({'file':'get_the_last_id.py'}):
+    results.append(result)
+with open('test.py','wb') as a:
+    a.write(results[0]['test'])
 
-results = db.collection_names()
-print(results)

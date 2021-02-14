@@ -1,0 +1,57 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Crd Notices</title>
+<style>
+    .jumbotron.form {
+        color: black !important;
+        background-image: linear-gradient(to top, gray 0% lightgray 100%) !important;
+        width: 1750px;
+        padding-bottom: 50px !important;
+        padding-top: 12.5px !important;
+        height: 750px;
+        margin: 7em auto;
+        border-radius: 1.5em;
+        box-shadow: 25px 15px 50px 2.5px rgba(0, 0, 0, 0.14);
+    }
+
+    .container.form {
+        padding-right: 2500px !important;
+        padding-left: 55px !important;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container form" style="padding-left: 75px !important;">
+    <div class="jumbotron form">
+        <br>
+        <form method="POST">
+            <div class="form-group">
+                <label for="user_name">Title</label>
+                <input required name="T" placeholder="Title" type="text" class="form-control" id="user_name">
+            </div>
+            <div class="form-group">
+                <label for="password">Description</label>
+                <input required name="D" placeholder="Description" type="text" class="form-control" id="password">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Notice</button>
+        </form>
+        <br>
+        <hr>
+        <br>
+        <div
+            style="background-color:gray !important; overflow: scroll !important; width:1700px !important; height:420px !important">
+            {% for notice in notices %}
+            <br>
+            <div class="container jumbotron">
+                <hr>
+                <h1>Title : {{ notice['Title'] }} <br> Description : {{ notice['Description'] }}</h1>
+                <hr>
+                <a href="/Admin/CRD/Notice/Delete/{{ notice['Title'] }}/{{ notice['Description'] }}"
+                    class="btn btn-danger">Delete</a>
+            </div>
+            <br>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

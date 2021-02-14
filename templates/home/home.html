@@ -1,6 +1,17 @@
-{% extends '/admin/base.html' %}
+{% extends "home/base.html" %}
 {% block head %}
-<title>Admin Crud Students</title>
+<title>
+    Home
+</title>
+<style>
+    .jumbotron {
+        color: black !important;
+    }
+
+    .card {
+        color: black !important;
+    }
+</style>
 {% endblock %}
 {% block body %}
 <div class="container">
@@ -19,24 +30,13 @@
                 <label for="email">Email</label>
                 <input required name="E" placeholder="Email" type="email" class="form-control" id="email">
             </div>
-            <button type="submit" class="btn btn-primary">Add Student</button>
+            <div class="form-group">
+                <label for="wan">Whatsapp Number</label>
+                <input required name="WAN" placeholder="Whatsapp Number" type="number" class="form-control" id="wan">
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
         </form>
         <br>
     </div>
-    {% for student in students %}
-    <br>
-    <div class="jumbotron" style="color:black;">
-        <hr>
-        <h1>User Name : {{ student[0]['User Name'] }} <br> Password : {{ student[0]['Password'] }} <br> Email :
-            {{ student[0]['Email']  }}</h1>
-        <hr>
-        <a href="/Admin/CRUD/Student/Update/{{ student[1]['User Name'] }}/{{ student[1]['Email'] }}"
-            class="btn btn-primary">Update</a>
-        <a href="/Admin/CRUD/Student/Delete/{{ student[1]['User Name'] }}/{{ student[1]['Email'] }}"
-            class="btn btn-danger">Delete</a>
-        <hr>
-    </div>
-    {% endfor %}
-    <a href="/Admin/CRUD/Teacher" class="btn btn-primary">Create Teacher(s)</a>
 </div>
 {% endblock %}

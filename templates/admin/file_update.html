@@ -1,0 +1,25 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Files</title>
+<style>
+    .card {
+        display: inline-block !important;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+        <form method="POST"">
+            <br>
+            <div class=" form-group">
+            <label for="N">New Name of {{ file_type }}</label>
+            <input required name="N" value="{{ file_type }}" placeholder="New Name" type="text" class="form-control"
+                id="N">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Add New File Type</button>
+    </form>
+</div>
+</div>
+{% endblock %}

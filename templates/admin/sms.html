@@ -1,0 +1,33 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin SMS Sender</title>
+<style>
+    .card {
+        display: inline-block !important;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+        <form method="POST">
+            <div class="form-group">
+                <label for="m">Message</label>
+                <input required name="m" placeholder="Message" type="text" class="form-control" id="m">
+            </div>
+            <hr>
+            <br>
+            {% for kid in kids %}
+            <div class="form-check">
+                <input class="form-check-input" name="K" type="checkbox" value="{{ kid }}" id="flexCheckChecked">
+                <label class="form-check-label" for="flexCheckChecked">
+                    {{ kid }}
+                </label>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">SEND SMS</button>
+        </form>
+        <br>
+    </div>
+</div>
+{% endblock %}

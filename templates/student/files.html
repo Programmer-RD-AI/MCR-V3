@@ -1,0 +1,26 @@
+{% extends "student/base.html" %}
+{% block head %}
+<title>
+    Files
+</title>
+<style>
+    .jumbotron {
+        color: black !important;
+    }
+
+    .card {
+        color: black !important;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <br>
+    {% for file_type in file_types %}
+    <div class="jumbotron">
+        <a href="/Student/File/{{file_type}}"><h3><b>{{file_type}}</b></h3></a>
+    </div>
+    {% endfor %}
+    <br>
+</div>
+{% endblock %}

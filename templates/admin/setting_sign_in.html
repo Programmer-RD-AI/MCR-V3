@@ -1,0 +1,28 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Home</title>
+<style>
+    .card {
+        display: inline-block !important;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+        <form method="POST" action="">
+            <div class="form-group">
+                <label for="user_name"><b> User Name (Name) </b></label>
+                <input type="text" name="UN" required placeholder="Please enter your user name" class="form-control"
+                    id="user_name" aria-describedby="emailHelp">
+            </div>
+            <div class="form-group">
+                <label for="password"><b> Password or Email</b></label>
+                <input type="text" name="POE" required class="form-control" id="password" required
+                    placeholder="Please enter your Admin email or password">
+            </div>
+            <button type="submit" class="btn btn-primary">Sign In (ReCheck)</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Crud Subjects</title>
+<style>
+    .jumbotron.form {
+        color: black !important;
+        background-image: linear-gradient(to top, gray 0% lightgray 100%) !important;
+        width: 1750px;
+        padding-bottom: 50px !important;
+        padding-top: 12.5px !important;
+        height: 600px;
+        margin: 7em auto;
+        border-radius: 1.5em;
+        box-shadow: 25px 15px 50px 2.5px rgba(0, 0, 0, 0.14);
+    }
+
+    .container.form {
+        padding-right: 2500px !important;
+        padding-left: 55px !important;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container form">
+    <div class="jumbotron form">
+        <br>
+        <form method="POST">
+            <div class="form-group">
+                <label for="subject_name">Subject Name</label>
+                <input required name="S" placeholder="Subject Name" type="text" class="form-control" id="subject_name">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Subject</button>
+        </form>
+        <br>
+        <div style="background-color:gray !important; overflow: scroll !important;border-radius:25px !important; width:1700px !important; height:420px !important">
+            {% for final_ in final %}
+            <br>
+            <div class="container jumbotron" style="color:black; width:1500px !important;">
+                <h1>{{ final_[0] }}</h1>
+                <a href="/Admin/CRUD/Subjects/Update/{{ final_[1] }}" class="btn btn-primary">Update</a>
+                <a href="/Admin/CRUD/Subjects/Delete/{{ final_[1] }}" class="btn btn-danger">Delete</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

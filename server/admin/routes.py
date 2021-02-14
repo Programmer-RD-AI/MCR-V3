@@ -4,6 +4,17 @@ from server.db.admin.crud_subjects import *
 from server.db.notices import *
 from server import session
 import base64
+from server.db.home.autentication import *
+from mailer import Mailer
+from server.db.admin.sms import SMS
+from server.db.admin.files import File_Admin
+import os
+
+
+def get_balance():
+    balance = SMS(phone_numbers=[], message="")
+    balance = balance.get_balance()
+    return balance
 
 
 @app.route("/Admin/")
@@ -18,7 +29,9 @@ def admin_home():
     ]
     if all(conditions):
         if session["Role"] == "Admin":
-            return render_template("/admin/home.html")
+            return render_template(
+                "/admin/home.html", sms_balance=get_balance(), page="Home"
+            )
     return abort(404)
 
 
@@ -53,6 +66,7 @@ def admin_crud_teacher():
             password = request.form["P"]
             email = request.form["E"]
             subject = request.form["S"]
+            whatsapp_number = request.form["WAN"]
             if subject == "None":
                 flash("Please seleect a subject !", "danger")
                 return redirect("/Admin/CRUD/Teacher")
@@ -60,7 +74,11 @@ def admin_crud_teacher():
                 flash("Please select a subject ! ", "danger")
                 return redirect("/Admin/CRUD/Teacher")
             t = Teacher(
-                user_name=user_name, password=password, email=email, subject=subject
+                user_name=user_name,
+                password=password,
+                email=email,
+                subject=subject,
+                whatsapp_number=whatsapp_number,
             )
             result = t.add_teacher()
             print(result)
@@ -72,7 +90,9 @@ def admin_crud_teacher():
         else:
             subjects = Subjects(subject="A")
             results = subjects.get_collections()
-            t = Teacher(user_name="A", password="A", email="A", subject="A")
+            t = Teacher(
+                user_name="A", password="A", email="A", subject="A", whatsapp_number=0
+            )
             final_results = []
             lenght_to_go = t.get_all_teachers()
             for info in lenght_to_go[0]:
@@ -88,11 +108,19 @@ def admin_crud_teacher():
             print(final_results)
             try:
                 return render_template(
-                    "/admin/crud_teacher.html", subjects=results, teachers=final_results
+                    "/admin/crud_teacher.html",
+                    sms_balance=get_balance(),
+                    subjects=results,
+                    teachers=final_results,
+                    page="Teachers",
                 )
             except:
                 return render_template(
-                    "/admin/crud_teacher.html", subjects=results, teachers=[]
+                    "/admin/crud_teacher.html",
+                    subjects=results,
+                    sms_balance=get_balance(),
+                    teachers=[],
+                    page="Teachers",
                 )
     return abort(404)
 
@@ -126,7 +154,9 @@ def admin_crud_delete_teacher(user_name, email):
     ]
     if all(conditions):
         if request.method == "POST":
-            t = Teacher(user_name="", password="", email="", subject="")
+            t = Teacher(
+                user_name="", password="", email="", subject="", whatsapp_number=""
+            )
             result = t.delete_teacher(email=email, user_name=user_name)
             if result is True:
                 flash("Successfully deleted the teacher.", "success")
@@ -145,10 +175,24 @@ def admin_crud_delete_teacher(user_name, email):
             )
         else:
             t = Teacher(
-                user_name=user_name, password="password", subject="gregt", email=email
+                user_name=user_name,
+                password="password",
+                subject="gregt",
+                email=email,
+                whatsapp_number="",
             )
             result = t.get_data_of_teacher(user_name=user_name, email=email)
-            return render_template("/admin/d_teacher.html", info=result[1])
+            print("+" * 100)
+            try:
+                return render_template(
+                    "/admin/d_teacher.html",
+                    sms_balance=get_balance(),
+                    info=result[1][0],
+                    page="Teachers",
+                )
+            except:
+                flash(f"Successfuly delted User !", "success")
+                return redirect("/Admin")
     return abort(404)
 
 
@@ -171,7 +215,7 @@ def admin_crud_delete_teacher(user_name, email):
 def admin_crud_update_teacher(user_name, email):
     user_name = decode_data(user_name)
     email = decode_data(email)
-    t = Teacher(user_name="", password="", email="", subject="")
+    t = Teacher(user_name="", password="", email="", subject="", whatsapp_number="")
     result = t.get_data_of_teacher(user_name=user_name, email=email)
     if result[0] is False:
         return abort(404)
@@ -190,6 +234,7 @@ def admin_crud_update_teacher(user_name, email):
             new_email = request.form["E"]
             new_subject = request.form["S"]
             new_role = request.form["R"]
+            new_whatsapp_number = request.form["WAN"]
             if new_role == "Student" or new_subject == "None":
                 if new_role != "Student":
                     flash("Please select the role as Student", "danger")
@@ -204,6 +249,7 @@ def admin_crud_update_teacher(user_name, email):
                         "Password": new_password,
                         "Email": new_email,
                         "Role": new_role,
+                        "Whatapp Number": new_whatsapp_number,
                     },
                     old_info=result[1][0],
                 )
@@ -222,6 +268,7 @@ def admin_crud_update_teacher(user_name, email):
                         "Email": new_email,
                         "Role": new_role,
                         "Subject": new_subject,
+                        "Whatapp Number": new_whatsapp_number,
                     },
                     old_info=result[1],
                 )
@@ -242,16 +289,23 @@ def admin_crud_update_teacher(user_name, email):
             s = Subjects(subject="")
             result = s.get_collections()
             t = Teacher(
-                user_name=user_name, password="password", email="go2ranuga", subject=""
+                user_name=user_name,
+                password="password",
+                email="go2ranuga",
+                subject="",
+                whatsapp_number="",
             )
             info = t.get_data_of_teacher(user_name=user_name, email=email)
             print(info)
             return render_template(
                 "/admin/u_teacher.html",
+                sms_balance=get_balance(),
                 subjects=result,
                 email=info[1][0]["Email"],
                 password=info[1][0]["Password"],
                 user_name=info[1][0]["User Name"],
+                whatsapp_number=info[1][0]["Whatsapp Number"],
+                page="Teachers",
             )
     return abort(404)
 
@@ -261,46 +315,56 @@ def admin_crud_update_teacher(user_name, email):
 @app.route("/Admin/CRUD/Students", methods=["POST", "GET"])
 @app.route("/Admin/CRUD/Students/", methods=["POST", "GET"])
 def admin_crud_student():
-        conditions = [
-            "Auth" in session,
-            "User Name" in session,
-            "Password or Email" in session,
-            "Role" in session,
-            session["Role"] == "Admin",
-            "Returned Data" in session,
-        ]
-        if all(conditions):
-            if request.method == "POST":
-                user_name = request.form["UN"]
-                password = request.form["P"]
-                email = request.form["E"]
-                s = Students(user_name=user_name, password=password, email=email)
-                result = s.add_student()
-                if result[0] is True:
-                    flash(result[1], "success")
-                else:
-                    flash(result[1], "danger")
-                return redirect("/Admin/CRUD/Student")
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        session["Role"] == "Admin",
+        "Returned Data" in session,
+    ]
+    if all(conditions):
+        if request.method == "POST":
+            user_name = request.form["UN"]
+            password = request.form["P"]
+            email = request.form["E"]
+            whatsapp_number = request.form["WAN"]
+            s = Students(
+                user_name=user_name,
+                password=password,
+                email=email,
+                whatsapp_number=whatsapp_number,
+            )
+            result = s.add_student()
+            if result[0] is True:
+                flash(result[1], "success")
             else:
-                s = Students(user_name="", password="", email="")
-                results = s.get_students()
-                final = []
-                for result in results[1]:
-                    result_not_encoded = result
-                    result_encoded = {}
-                    result_encoded["User Name"] = encode_data(
-                        result_not_encoded["User Name"]
-                    )
-                    result_encoded["Password"] = encode_data(
-                        result_not_encoded["Password"]
-                    )
-                    result_encoded["Email"] = encode_data(result_not_encoded["Email"])
-                    del result_not_encoded["_id"]
-                    print([result_not_encoded, result_encoded])
-                    final.append([result_not_encoded, result_encoded])
-                print(final)
-                return render_template("/admin/crud_student.html", students=final)
-        return abort(404)
+                flash(result[1], "danger")
+            return redirect("/Admin/CRUD/Student")
+        else:
+            s = Students(user_name="", password="", email="", whatsapp_number="")
+            results = s.get_students()
+            final = []
+            for result in results[1]:
+                result_not_encoded = result
+                result_encoded = {}
+                result_encoded["User Name"] = encode_data(
+                    result_not_encoded["User Name"]
+                )
+                result_encoded["Password"] = encode_data(result_not_encoded["Password"])
+                result_encoded["Email"] = encode_data(result_not_encoded["Email"])
+                print(result_not_encoded)
+                del result_not_encoded["_id"]
+                print([result_not_encoded, result_encoded])
+                final.append([result_not_encoded, result_encoded])
+            print(final)
+            return render_template(
+                "/admin/crud_student.html",
+                page="Students",
+                students=final,
+                sms_balance=get_balance(),
+            )
+    return abort(404)
 
 
 @app.route(
@@ -322,7 +386,9 @@ def admin_crud_student():
 def admin_crud_update_student(user_name, email):
     user_name = decode_data(user_name)
     email = decode_data(email)
-    s = Students(user_name=user_name, password=email + user_name, email=email)
+    s = Students(
+        user_name=user_name, password=email + user_name, email=email, whatsapp_number=""
+    )
     old_info = s.get_data_of_student(user_name=user_name, email=email)
     conditions = [
         "Auth" in session,
@@ -339,6 +405,7 @@ def admin_crud_update_student(user_name, email):
             new_email = request.form["E"]
             new_role = request.form["R"]
             new_subject = request.form["S"]
+            new_whatsapp_number = request.form["WAN"]
             if new_role == "None":
                 flash("Please select a role ! ", "danger")
                 return redirect(
@@ -374,6 +441,7 @@ def admin_crud_update_student(user_name, email):
                         "Email": new_email,
                         "Role": new_role,
                         "Subject": new_subject,
+                        "Whatsapp Number": request.form["WAN"],
                     },
                     old_info=old_info[1],
                 )
@@ -390,9 +458,13 @@ def admin_crud_update_student(user_name, email):
                         "Password": new_password,
                         "Email": new_email,
                         "Role": new_role,
+                        "Whatsapp Number": request.form["WAN"],
                     },
                     old_info=old_info[1],
                 )
+                print("*" * 100)
+                print(result_update_student)
+                print("*" * 100)
                 if result_update_student is False:
                     flash(
                         "There is another user with the same info or an error occured ! ",
@@ -403,18 +475,27 @@ def admin_crud_update_student(user_name, email):
             flash("Updated ! ", "success")
             return redirect("/Admin/CRUD/Student")
         else:
-            s = Students(user_name=user_name, password="password", email=email)
+            s = Students(
+                user_name=user_name,
+                password="password",
+                email=email,
+                whatsapp_number="",
+            )
             result = s.get_data_of_student(user_name=user_name, email=email)
             subjects = Subjects(subject="grdfg")
             result_subject = subjects.get_collections()
             print(result_subject)
             print(result)
+            print(result[1][0]["Whatapp Number"])
             return render_template(
                 "/admin/u_student.html",
                 email=result[1][0]["Email"],
                 user_name=result[1][0]["User Name"],
                 password=result[1][0]["Password"],
+                sms_balance=get_balance(),
                 subjects=result_subject,
+                whatsapp_number=result[1][0]["Whatapp Number"],
+                page="Students",
             )
     return abort(404)
 
@@ -436,40 +517,52 @@ def admin_crud_update_student(user_name, email):
     methods=["POST", "GET"],
 )
 def admin_crud_delete_student(user_name, email):
-    try:
-        user_name = decode_data(user_name)
-        email = decode_data(email)
-        conditions = [
-            "Auth" in session,
-            "User Name" in session,
-            "Password or Email" in session,
-            "Role" in session,
-            session["Role"] == "Admin",
-            "Returned Data" in session,
-        ]
-        if all(conditions):
-            if request.method == "POST":
-                s = Students(user_name=user_name, password="password", email=email)
-                result = s.get_data_of_student(user_name=user_name, email=email)
-                result_del = s.delete_student(infos=result[1])
-                if result_del is False:
-                    flash("An Error Occurred ! ", "danger")
-                    return redirect(
-                        "/Admin/CRUD/Student/Delete/"
-                        + encode_data(user_name)
-                        + "/"
-                        + encode_data(email)
-                    )
-                flash("Deleted Successfully ! ", "success")
-                return redirect("/Admin/CRUD/Student")
-            else:
-                s = Students(user_name=user_name, password="password", email=email)
-                result = s.get_data_of_student(user_name=user_name, email=email)
-                print(result)
-                return render_template("/admin/d_student.html", info=result[1][0])
-        return abort(404)
-    except:
-        return abort(505)
+    user_name = decode_data(user_name)
+    email = decode_data(email)
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        session["Role"] == "Admin",
+        "Returned Data" in session,
+    ]
+    if all(conditions):
+        if request.method == "POST":
+            s = Students(
+                user_name=user_name,
+                password="password",
+                email=email,
+                whatsapp_number="",
+            )
+            result = s.get_data_of_student(user_name=user_name, email=email)
+            result_del = s.delete_student(infos=result[1])
+            if result_del is False:
+                flash("An Error Occurred ! ", "danger")
+                return redirect(
+                    "/Admin/CRUD/Student/Delete/"
+                    + encode_data(user_name)
+                    + "/"
+                    + encode_data(email)
+                )
+            flash("Deleted Successfully ! ", "success")
+            return redirect("/Admin/CRUD/Student")
+        else:
+            s = Students(
+                user_name=user_name,
+                password="password",
+                email=email,
+                whatsapp_number="",
+            )
+            result = s.get_data_of_student(user_name=user_name, email=email)
+            print(result)
+            return render_template(
+                "/admin/d_student.html",
+                page="Students",
+                info=result[1][0],
+                sms_balance=get_balance(),
+            )
+    return abort(404)
 
 
 @app.route("/Admin/CRUD/Subjects", methods=["POST", "GET"])
@@ -516,7 +609,12 @@ def admin_crud_subjects():
                 print(json_encoded)
                 for subject, subject_encoded in zip(results, json_encoded):
                     final.append([subject, subject_encoded])
-                return render_template("/admin/crud_subjects.html", final=final)
+                return render_template(
+                    "/admin/crud_subjects.html",
+                    page="Subjects",
+                    sms_balance=get_balance(),
+                    final=final,
+                )
         return abort(404)
     except:
         return abort(505)
@@ -570,7 +668,12 @@ def admin_crud_subjects_update(subject_name):
             flash("An error occurred ! ", "danger")
             return redirect("/Admin/CRUD/Subjects/Update/" + old_subject_name)
         else:
-            return render_template("/admin/u_subjects.html", old_name=subject_name)
+            return render_template(
+                "/admin/u_subjects.html",
+                sms_balance=get_balance(),
+                old_name=subject_name,
+                page="Subjects",
+            )
     return abort(404)
 
 
@@ -608,7 +711,12 @@ def admin_crud_subjects_delete(subject_name):
             flash("An error occurred ! ", "danger")
             return redirect("/Admin/CRUD/Subjects")
         else:
-            return render_template("/admin/d_subjects.html", name=subject_name)
+            return render_template(
+                "/admin/d_subjects.html",
+                page="Subjects",
+                sms_balance=get_balance(),
+                name=subject_name,
+            )
     return abort(404)
 
 
@@ -649,7 +757,12 @@ def crd_notices():
             return redirect("/Admin/CRD/Notices")
         else:
             notices = get_notices()
-            return render_template("/admin/crd_notices.html", notices=notices)
+            return render_template(
+                "/admin/crd_notices.html",
+                page="Notices",
+                sms_balance=get_balance(),
+                notices=notices,
+            )
     return abort(404)
 
 
@@ -688,6 +801,583 @@ def crd_notices_delete(title, description):
                     flash("An error occured ! ", "danger")
                     return redirect(f"/Admin/CRD/Notices/Delete/{title}/{description}")
             else:
-                return render_template("/admin/d_notice.html", title=title)
+                return render_template(
+                    "/admin/d_notice.html",
+                    page="Notices",
+                    sms_balance=get_balance(),
+                    title=title,
+                )
         return abort(404)
     return abort(404)
+
+
+@app.route(
+    "/Admin/RDA/Register",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/RDA/Register/",
+    methods=["POST", "GET"],
+)
+def register():
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    if all(conditions):
+        if session["Role"] == "Admin":
+            if request.method == "POST":
+                pass
+            else:
+                r = Register(user_name="", password="", whatsapp_number="", email="")
+                results = r.get_all_to_register_users()
+                return render_template(
+                    "/admin/register.html",
+                    page="Register",
+                    sms_balance=get_balance(),
+                    results=results,
+                )
+        return abort(404)
+    return abort(404)
+
+
+@app.route(
+    "/Admin/RDA/Register/Admit/<_id>",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/RDA/Register/Admit/<_id>/",
+    methods=["POST", "GET"],
+)
+def register_admit(_id):
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    if all(conditions):
+        if session["Role"] == "Admin":
+            _id = int(_id)
+            r = Register(user_name="", password="", whatsapp_number="", email="")
+            result = r.delete_user(_id=_id)
+            if result[0] is True or result[1] != []:
+                print(result)
+                s = Students(
+                    user_name=result[1][0]["User Name"],
+                    password=result[1][0]["Password"],
+                    email=result[1][0]["Email"],
+                    whatsapp_number=result[1][0]["Whatsapp Number"],
+                )
+                s.add_student()
+                print("OK")
+                flash(f"Successfully admitted user with id:{_id}", "success")
+                return redirect("/Admin/RDA/Register")
+            flash("An error occured.", "danger")
+            return redirect("/Admin/RDA/Register")
+        print("DEAD")
+        print("*" * 100)
+        return abort(404)
+    print("DEAD")
+    print("*" * 100)
+    return abort(404)
+
+
+@app.route(
+    "/Admin/RDA/Register/Reject/<_id>",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/RDA/Register/Reject/<_id>/",
+    methods=["POST", "GET"],
+)
+def register_reject(_id):
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    if all(conditions):
+        if session["Role"] == "Admin":
+            _id = int(_id)
+            r = Register(user_name="", password="", whatsapp_number="", email="")
+            result = r.get_user_info_from__id(_id=_id)
+            if result[0] is True or result[1] != []:
+                send_email(
+                    "go2ranugad@gmail.com",
+                    "RANUGA D 2008",
+                    to_email=result[1][0]["Email"],
+                    message="You got reject by MyClassRoom-Admin",
+                    subject="You got reject by MyClassRoom-Admin try again.",
+                )
+                r.delete_user(_id)
+                print("OK")
+                flash(f"Successfully rejected user with id:{_id}", "success")
+                return redirect("/Admin/RDA/Register")
+            flash("An error occured.", "danger")
+            return redirect("/Admin/RDA/Register")
+        print("DEAD")
+        print("*" * 100)
+        return abort(404)
+    print("DEAD")
+    print("*" * 100)
+    return abort(404)
+
+
+def send_email(email, password, to_email, message, subject):
+    import smtplib, ssl
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+
+    send_to_email = to_email
+    msg = MIMEMultipart()
+    msg["From"] = email
+    msg["To"] = send_to_email
+    msg["Subject"] = subject
+    msg.attach(MIMEText(message, "plain"))
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(email, password)
+    text = msg.as_string()
+    server.sendmail(email, send_to_email, text)
+    server.quit()
+
+
+@app.route(
+    "/Admin/SMS/",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/SMS",
+    methods=["POST", "GET"],
+)
+def sms():
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    if all(conditions):
+        if session["Role"] == "Admin":
+            if request.method == "POST":
+                message = request.form["m"]
+                ticked = request.form.getlist("K")
+                if ticked == []:
+                    flash("Please select a student.", "danger")
+                    return redirect("/Admin/SMS")
+                print(ticked)
+                s = Students(user_name="", password="", email="", whatsapp_number="")
+                students = s.get_students()
+                students = students[1]
+                ticked_info = []
+                for student in students:
+                    if student["User Name"] in ticked:
+                        ticked_info.append(student["Whatapp Number"])
+                sms = SMS(phone_numbers=ticked_info, message=message)
+                result = sms.send()
+                flash(
+                    f"The amount of money spent to send (Message : {message}) {result[1]}",
+                    "success",
+                )
+                return redirect("/Admin/SMS")
+            else:
+                s = Students(user_name="", password="", email="", whatsapp_number="")
+                kids = s.get_students()
+                names = []
+                for kid in kids[1]:
+                    names.append(kid["User Name"])
+                kids = names
+                print(kids)
+                logs = SMS(phone_numbers=[], message=[])
+                logs = logs.get_logs()
+                return render_template(
+                    "/admin/sms.html",
+                    sms_balance=get_balance(),
+                    page="SMS",
+                    logs=logs,
+                    kids=kids,
+                )
+        return abort(404)
+    print("DEAD")
+    print("*" * 100)
+    return abort(404)
+
+
+@app.route(
+    "/Admin/File/",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/File",
+    methods=["POST", "GET"],
+)
+def files():
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    if all(conditions):
+        if session["Role"] == "Admin":
+            if request.method == "POST":
+                new_file_type = request.form["NFT"]
+                fa = File_Admin(file="", description="")
+                if new_file_type in fa.get_all_file_types():
+                    flash("There is another file type with the same name !", "danger")
+                    return redirect("/Admin/File")
+                result = fa.add_file_type(new_file_type)
+
+                if result is True:
+                    flash("new file type added", "success")
+                    return redirect("/Admin/File/")
+                else:
+                    flash("An error occured", "danger")
+                    return redirect("/Admin/File/")
+            else:
+                fa = File_Admin(file="", description="")
+                file_types = fa.get_all_file_types()
+                return render_template(
+                    "/admin/file.html",
+                    page="Files",
+                    sms_balance=get_balance(),
+                    file_types=file_types,
+                )
+        return abort(404)
+    return abort(404)
+
+
+@app.route(
+    "/Admin/File/<string:file_type>/",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/File/<string:file_type>",
+    methods=["POST", "GET"],
+)
+def file_type(file_type):
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    f = File_Admin(file="", description="")
+    if file_type not in f.get_all_file_types():
+        return abort(404)
+    if all(conditions):
+        if session["Role"] == "Admin":
+            if request.method == "POST":
+                file = request.files["F"]
+                desc = request.form["D"]
+                f = File_Admin(file=file, description=desc)
+                result = f.add(file_type_name=file_type, file=file)
+                if result is True:
+                    flash("Added File.", "success")
+                    return redirect(f"/Admin/File/{file_type}")
+                else:
+                    flash("An error occured ! ", "danger")
+                    return redirect(f"/Admin/File/{file_type}")
+            else:
+                files = f.get_all_files_in_a_file_type(file_type)
+                return render_template(
+                    "/admin/file_type.html",
+                    page="Files",
+                    files=files,
+                    file_type=file_type,
+                )
+        return abort(404)
+    return abort(404)
+
+
+@app.route(
+    "/Admin/File/<string:file_type>/Delete/",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/File/<string:file_type>/Delete",
+    methods=["POST", "GET"],
+)
+def file_type_delete(file_type):
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    f = File_Admin(file="", description="")
+    if file_type not in f.get_all_file_types():
+        return abort(404)
+    if all(conditions):
+        if session["Role"] == "Admin":
+            f = File_Admin(file="", description="")
+            f.delete_file_type(file_type_name=file_type)
+            flash(f"{file_type} deleted.", "success")
+            return redirect("/Admin/File")
+        return abort(404)
+    return abort(404)
+
+
+@app.route(
+    "/Admin/File/<string:file_type>/Update/",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/File/<string:file_type>/Update",
+    methods=["POST", "GET"],
+)
+def file_type_update(file_type):
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    f = File_Admin(file="", description="")
+    if file_type not in f.get_all_file_types():
+        return abort(404)
+    if all(conditions):
+        if session["Role"] == "Admin":
+            if request.method == "POST":
+                file_type_new = request.form["N"]
+                file_type_old = file_type
+                if file_type_new == file_type_old:
+                    flash(
+                        "The new name and the old name are the exact same !!", "danger"
+                    )
+                    return redirect(f"/Admin/File/{file_type}/Update")
+                f.update_file_type(
+                    old_file_name=file_type_old, new_file_name=file_type_new
+                )
+                flash(
+                    f"Updated ! (Old : {file_type_old} | New : {file_type_new})",
+                    "success",
+                )
+                return redirect("/Admin/File/")
+            else:
+                return render_template(
+                    "/admin/file_update.html", page="Files", file_type=file_type
+                )
+        return abort(404)
+    return abort(404)
+
+
+@app.route(
+    "/Admin/File/<string:file_type>/<string:filename>/<string:desc>/Download/",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/File/<string:file_type>/<string:filename>/<string:desc>/Download",
+    methods=["POST", "GET"],
+)
+def file_type_download(file_type, filename, desc):
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    f = File_Admin(file="", description="")
+    if filename not in f.get_all_files(file_type_name=file_type):
+        return abort(404)
+    print("OK")
+    if file_type not in f.get_all_file_types():
+        return abort(404)
+    if all(conditions):
+        if session["Role"] == "Admin":
+            f = File_Admin(file="", description=desc)
+            result = f.get(
+                file_type_name=file_type,
+                description=desc,
+                filename=filename,
+            )
+            print("*+" * 100)
+            print(result)
+            print("*+" * 100)
+            return send_from_directory(
+                result[0], filename=result[1], as_attachment=True
+            )
+
+
+@app.route(
+    "/Admin/File/<string:file_type>/<string:filename>/<string:desc>/View/",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/File/<string:file_type>/<string:filename>/<string:desc>/View",
+    methods=["POST", "GET"],
+)
+def file_type_view(file_type, filename, desc):
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    f = File_Admin(file="", description="")
+    if filename not in f.get_all_files(file_type_name=file_type):
+        return abort(404)
+    print("OK")
+    if file_type not in f.get_all_file_types():
+        return abort(404)
+    if all(conditions):
+        if session["Role"] == "Admin":
+            f = File_Admin(file="", description=desc)
+            result = f.get(
+                file_type_name=file_type,
+                description=desc,
+                filename=filename,
+            )
+            return send_from_directory(
+                result[0], filename=result[1], as_attachment=False
+            )
+
+
+@app.route(
+    "/Admin/File/<string:file_type>/<string:filename>/<string:desc>/Delete/",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/File/<string:file_type>/<string:filename>/<string:desc>/Delete",
+    methods=["POST", "GET"],
+)
+def file_type_delete_file(file_type, filename, desc):
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    f = File_Admin(file="", description="")
+    if filename not in f.get_all_files(file_type_name=file_type):
+        return abort(404)
+    if file_type not in f.get_all_file_types():
+        return abort(404)
+    if all(conditions):
+        if session["Role"] == "Admin":
+            f = File_Admin(file="", description=desc)
+            f.delete(description=desc, filename=filename, file_type_name=file_type)
+            flash("File Deleted Successfuly", "success")
+            return redirect(f"/Admin/File/{file_type}")
+    return abort(404)
+
+
+@app.route(
+    "/Admin/Settings/Sign/In/",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/Settings/Sign/In",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/Setting/Sign/In",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/Setting/Sign/In/",
+    methods=["POST", "GET"],
+)
+def setting_admin_sign_in():
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    if all(conditions):
+        if session["Role"] == "Admin":
+            if request.method == "POST":
+                user_name = request.form["UN"]
+                password_or_email = request.form["POE"]
+                si = Sign_In(
+                    user_name=user_name,
+                    password_or_email=password_or_email,
+                    role="Admin",
+                )
+                result = si.check()
+                if result[0] is True:
+                    flash("Autenticated Successfully !", "success")
+                    session["Settings ?"] = True
+                    return redirect("/Admin/Settings")
+                else:
+                    flash("Autentication failed !", "danger")
+                    try:
+                        session["Setting Try"] = session["Setting Try"] + 1
+                    except:
+                        session["Setting Try"] = 0
+                    if session["Setting Try"] == 2:
+                        flash("You tried 3 time !", "danger")
+                        return redirect("/Admin/Log/Out")
+                    return redirect("/Admin/Settings/Sign/In")
+            else:
+                return render_template("/admin/setting_sign_in.html", page="Settings")
+
+
+@app.route(
+    "/Admin/Settings",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/Settings/",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/Setting",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Admin/Setting/",
+    methods=["POST", "GET"],
+)
+def setting_admin():
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    if all(conditions):
+        if session["Role"] == "Admin" and session["Settings ?"] is True:
+            if request.method == "POST":
+                new_user_name = request.form["NUN"]
+                new_password = request.form["NP"]
+                new_email = request.form["NE"]
+                setting_db = cluster["Auth"]
+                setting_collection = setting_db["Auth-Sign-In"]
+                old_info = ""
+                results = []
+                for result in setting_collection.find({"Role": "Admin"}):
+                    results.append(result)
+                old_info = results[0]
+                new_info = {}
+                _id = get_custom_last_id(db="Auth", collection="Auth-Sign-In")
+                new_info["User Name"] = new_user_name
+                new_info["Password"] = new_password
+                new_info["Email"] = new_email
+                new_info["_id"] = _id
+                new_info["Role"] = "Admin"
+                setting_collection.delete_one(old_info)
+                setting_collection.insert_one(new_info)
+                flash("Updated", "success")
+                session.drop("Setting ?", None)
+                return redirect("/Admin/")
+            else:
+                return render_template("/admin/setting_update.html", page="Settings")

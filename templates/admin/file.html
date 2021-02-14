@@ -1,0 +1,34 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Files</title>
+<style>
+    .card {
+        display: inline-block !important;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+        <form method="POST">
+            <div class="form-group">
+                <label for="new_file_type">New File Type</label>
+                <input required name="NFT" placeholder="New File Type" type="text" class="form-control"
+                    id="new_file_type">
+            </div>
+            <button type="submit" class="btn btn-primary">Add New File Type</button>
+        </form>
+        <br>
+        {% for file_type in file_types %}
+        <div class="jumbotron" style="background-color: lightgray;">
+            <a href="/Admin/File/{{file_type}}"><h3><b> File Saving Type : {{ file_type }}</b></h3></a>
+            <br>
+            <a href="/Admin/File/{{file_type}}/Delete" class="btn btn-danger">Delete</a>
+            <br>
+            <br>
+            <a href="/Admin/File/{{file_type}}/Update" class="btn btn-primary">Update</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

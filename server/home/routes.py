@@ -1,20 +1,30 @@
 from server import *
 import random
-from server.db.home.autentication import Sign_In
+from server.db.home.autentication import Sign_In,Register
 
 
-@app.route("/")
+@app.route("/",methods=['POST','GET'])
 def home():
-    try:
-        links = [
-            "https://1.bp.blogspot.com/-3Z4UgmzETpw/WS59lSXgWXI/AAAAAAAAAEk/QfHUxwXEPeE9Bo2Nu4yBKcn5VrGFn-D2wCLcB/s1600/Hello.gif",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp5z7ZISKeWBfOnIiuAExY78oIlUXX-Hfqgw&usqp=CAU",
-            "https://i.pinimg.com/originals/4d/7a/8f/4d7a8f9b9cd725332996654512169a50.gif",
-        ]
-        gif_link = random.choice(links)
-        return render_template("/home/home.html", img=gif_link)
-    except:
-        return abort(505)
+        if request.method == 'POST':
+            whatsapp_number = request.form['WAN']
+            user_name = request.form['UN']
+            password = request.form['P']
+            email = request.form['E']
+            if str(whatsapp_number)[0] != '9':
+                flash('Please enter a number as like 94778899111','danger')
+                return redirect('/')
+            whatsapp_number = int(whatsapp_number)
+            r = Register(user_name,password,whatsapp_number,email)
+            results = r.check()
+            if results[0] is True:
+                flash(results[1][0],'success')
+            else:
+                for result in results[1]:
+                    flash(result,'danger')
+            return redirect('/')
+        else:
+            return render_template("/home/home.html")
+
 
 
 @app.route("/Sign/In", methods=["POST", "GET"])

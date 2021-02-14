@@ -14,8 +14,8 @@
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input required name="P" value="{{ password }}" placeholder="Password" type="password" class="form-control"
-                    id="password">
+                <input required name="P" value="{{ password }}" placeholder="Password" type="password"
+                    class="form-control" id="password">
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
@@ -38,6 +38,11 @@
                     <option>{{ subject }}</option>
                     {% endfor %}
                 </select>
+            </div>
+            <div class="form-group">
+                <label for="Whatapp Number">Whatapp Number</label>
+                <input required name="WAN" value="{{ whatsapp_number }}" placeholder="Whatapp Number" type="number"
+                    class="form-control" id="Whatapp Number">
             </div>
             <button type="submit" class="btn btn-primary">Update Student</button>
         </form>

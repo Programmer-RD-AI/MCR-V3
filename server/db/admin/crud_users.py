@@ -9,19 +9,21 @@ subject_db = cluster["Subjects"]
 
 
 class Teacher:
-    def __init__(self, user_name, password, email, subject):
+    def __init__(self, user_name, password, email, subject, whatsapp_number):
         try:
             self.user_name = user_name
             self.password = password
             self.email = email
             self.subject = subject
             self.subject_collection = subject_db[subject]
+            self.whatsapp_number = whatsapp_number
         except:
             self.user_name = "user_name"
             self.password = "password"
             self.email = "email"
             self.subject = "subject"
             self.subject_collection = "subject_db[subject]"
+            self.whatsapp_number = "whatsapp_number"
 
     def __repr__(self):
         return "Teacher"
@@ -49,6 +51,7 @@ class Teacher:
                     "Email": self.email,
                     "Role": "Teacher",
                     "Subject": self.subject,
+                    "Whatsapp Number": self.whatsapp_number,
                 }
             )
             self.subject_collection.insert_one(
@@ -58,6 +61,7 @@ class Teacher:
                     "Email": self.email,
                     "Role": "Teacher",
                     "Subject": self.subject,
+                    "Whatsapp Number": self.whatsapp_number,
                 }
             )
             return [True, "New Teacher Created ! "]
@@ -90,20 +94,22 @@ class Teacher:
         return [True, results]
 
     def update_teacher(self, new_info: dict, old_info: dict):
-        si1 = Sign_In(
-            user_name=new_info["User Name"],
-            password_or_email=new_info["Password"],
-            role=new_info["Role"],
-        )
-        si2 = Sign_In(
-            user_name=new_info["User Name"],
-            password_or_email=new_info["Email"],
-            role=new_info["Role"],
-        )
-        results = [si1.check(), si2.check()]
-        print(results[0][0])
-        if results[0][0] is True or results[1][0] is True:
-            return False
+        # si1 = Sign_In(
+        #     user_name=new_info["User Name"],
+        #     password_or_email=new_info["Password"],
+        #     role=new_info["Role"],
+        # )
+        # si2 = Sign_In(
+        #     user_name=new_info["User Name"],
+        #     password_or_email=new_info["Email"],
+        #     role=new_info["Role"],
+        # )
+        # results = [si1.check(), si2.check()]
+        # print('*'*100)
+        # print(results)
+        # print('*'*100)
+        # if results[0][0] is True or results[1][0] is True:
+        #     return False
         results = []
         if new_info["Role"] == "Student":
             new = {
@@ -112,6 +118,7 @@ class Teacher:
                     "Password": new_info["Password"],
                     "Email": new_info["Email"],
                     "Role": new_info["Role"],
+                    "Whatapp Number": new_info["Whatapp Number"],
                 }
             }
             subject_collection = subject_db[old_info["Subject"]]
@@ -124,6 +131,7 @@ class Teacher:
                     "Email": new_info["Email"],
                     "Role": new_info["Role"],
                     "Subject": new_info["Subject"],
+                    "Whatapp Number": new_info["Whatapp Number"],
                 }
             }
         print(old_info)
@@ -158,15 +166,17 @@ class Teacher:
 
 
 class Students:
-    def __init__(self, user_name, password, email):
+    def __init__(self, user_name, password, email,whatsapp_number):
         try:
             self.user_name = user_name
             self.password = password
             self.email = email
+            self.whatsapp_number = whatsapp_number
         except:
             self.user_name = "user_name"
             self.password = "password"
             self.email = "email"
+            self.whatsapp_number = "whatsapp_number"
 
     def __repr__(self):
         return "Teacher"
@@ -193,6 +203,7 @@ class Students:
                 "User Name": self.user_name,
                 "Password": self.password,
                 "Email": self.email,
+                "Whatapp Number": self.whatsapp_number,
                 "Role": "Student",
             }
         )
@@ -216,20 +227,20 @@ class Students:
             return [False, ""]
 
     def update_student(self, new_info: dict, old_info: dict):
-        si1 = Sign_In(
-            user_name=new_info["User Name"],
-            password_or_email=new_info["Password"],
-            role=new_info["Role"],
-        )
-        si2 = Sign_In(
-            user_name=new_info["User Name"],
-            password_or_email=new_info["Email"],
-            role=new_info["Role"],
-        )
-        results = [si1.check(), si2.check()]
-        print(results)
-        if results[0][0] is True or results[1][0] is True:
-            return False
+        # si1 = Sign_In(
+        #     user_name=new_info["User Name"],
+        #     password_or_email=new_info["Password"],
+        #     role=new_info["Role"],
+        # )
+        # si2 = Sign_In(
+        #     user_name=new_info["User Name"],
+        #     password_or_email=new_info["Email"],
+        #     role=new_info["Role"],
+        # )
+        # results = [si1.check(), si2.check()]
+        # print(results)
+        # if results[0][0] is True or results[1][0] is True:
+        #     return False
         print(old_info)
         old_info = old_info[0]
         if new_info["Role"] == "Student":
@@ -240,6 +251,7 @@ class Students:
                     "Password": new_info["Password"],
                     "Email": new_info["Email"],
                     "Role": new_info["Role"],
+                    'Whatapp Number':new_info['Whatsapp Number']
                 }
             }
             auth_collection_sign_in.update_one(old_info, new)
@@ -252,6 +264,7 @@ class Students:
                     "Email": new_info["Email"],
                     "Role": new_info["Role"],
                     "Subject": new_info["Subject"],
+                    'Whatapp Number':new_info['Whatsapp Number']
                 }
             }
             subject_collection = subject_db[new_info["Subject"]]
@@ -264,6 +277,7 @@ class Students:
                     "Email": new_info["Email"],
                     "Role": new_info["Role"],
                     "Subject": new_info["Subject"],
+                    'Whatapp Number':new_info['Whatsapp Number']
                 }
             )
             auth_collection_sign_in.update_one(old_info, new)
