@@ -1,0 +1,30 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Marks Prediction</title>
+<style>
+    .card {
+        display: inline-block !important;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div>
+    <center>
+        <br>
+        <a href="/Admin/Predicting/Marks/T1" style="width: 1750px !important; height:75px !important;"
+            class="btn btn-primary">Term 1 Marks
+            Prediction</a>
+        <br>
+        <br>
+        <a href="/Admin/Predicting/Marks/T2" style="width: 1750px !important; height:75px !important;"
+            class="btn btn-primary">Term 2 Marks
+            Prediction</a>
+        <br>
+        <br>
+        <a href="/Admin/Predicting/Marks/T3" style="width: 1750px !important; height:75px !important;"
+            class="btn btn-primary">Term 3 Marks
+            Prediction</a>
+        <br>
+    </center>
+</div>
+{% endblock %}

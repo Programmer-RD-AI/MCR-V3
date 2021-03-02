@@ -3,7 +3,7 @@ from server.db.admin.crud_subjects import *
 from server.db.admin.crud_users import *
 from server.db.notices import *
 from server.db.admin.files import *
-
+from server.db.admin.stream import *
 
 @app.route("/Student")
 @app.route("/Student/")
@@ -178,3 +178,43 @@ def file_type_view_student(file_type, filename, desc):
             return send_from_directory(
                 result[0], filename=result[1], as_attachment=False
             )
+
+@app.route(
+    "/Student/Chat",
+    methods=["POST", "GET"],
+)
+@app.route(
+    "/Student/Chat/",
+    methods=["POST", "GET"],
+)
+def chat():
+    conditions = [
+        "Auth" in session,
+        "User Name" in session,
+        "Password or Email" in session,
+        "Role" in session,
+        "Returned Data" in session,
+    ]
+    print("OK")
+    if all(conditions):
+        if session["Role"] == "Student":
+            if request.method == 'POST':
+                message = request.form["M"]
+                s = Stream(
+                    message=message,
+                    user_name=session["User Name"],
+                    role=session["Role"],
+                )
+                s.add()
+                return redirect("/Student/Chat")
+            else:
+                messages = Stream(message="", user_name="", role="")
+                messages = messages.get()
+                messages = messages[::-1]
+                return render_template(
+                    "/student/chat.html",
+                    page="Chat",
+                    messages=messages,
+                    user_name=session["User Name"],
+                )
+

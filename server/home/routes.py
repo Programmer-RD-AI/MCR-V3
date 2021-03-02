@@ -36,7 +36,7 @@ def sign_in():
             role = request.form["R"]
             if role == "Choose":
                 flash(
-                    "No god no !!! please select the role you dumb person !!!!!!!!!!!!",
+                    "please select the role !!!!!!!!!!!!",
                     "danger",
                 )
                 return redirect("/Sign/In")

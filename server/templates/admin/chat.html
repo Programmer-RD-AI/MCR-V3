@@ -1,0 +1,31 @@
+{% extends '/admin/base.html' %}
+{% block head %}
+<title>Admin Chat</title>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <form method="POST">
+        <div class="form-group">
+            <label for="message">Message</label>
+            <input required name="M" placeholder="message" type="text" class="form-control" id="message">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Notice</button>
+    </form>
+</div>
+<br>
+<br>
+{% for message in messages %}
+<div class="jumbotron">
+    {% if message['User Name'] == 'Admin' %}
+    <h4> Message : <b> {{ message['Message'] }} </b> </h4>
+    <br>
+    <h4> Name : <b> {{ message['User Name'] }} </b> </h4>
+    <br>
+    <a href="/Admin//Chat/Delete/{{message['_id']}}" class="btn btn-danger">Delete</a>
+    {% else %}
+    Message {{ message['Message'] }}
+    {% endif %}
+    <h4> Time : <b> {{ message['time'] }} </b> </h4>
+</div>
+{% endfor %}
+{% endblock %}
