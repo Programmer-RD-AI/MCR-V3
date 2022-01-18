@@ -1,6 +1,4 @@
 from server import *
-from mailer import Mailer
-import threading
 from mongodb.get_the_last_id import get_custom_last_id
 
 auth_db = cluster["Auth"]

@@ -1,6 +1,4 @@
 from pymongo import *
-import base64
-import bson
 from bson.binary import Binary
 
 cluster = MongoClient(

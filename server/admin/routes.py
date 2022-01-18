@@ -5,20 +5,13 @@ from server.db.notices import *
 from server import session
 import base64
 from server.db.home.autentication import *
-from mailer import Mailer
 from server.db.admin.sms import SMS
 from server.db.admin.files import File_Admin
-import os
 from server.db.admin.stream import *
 from mongodb.get_the_last_id import *
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-import json
 import pickle
-from sklearn.linear_model import SGDClassifier, Ridge, Lasso
-from sklearn.ensemble import RandomForestClassifier,RandomForestRegressor
-from sklearn.feature_extraction.text import CountVectorizer
 
 
 def get_balance():
@@ -941,7 +934,7 @@ def register_reject(_id):
 
 
 def send_email(email, password, to_email, message, subject):
-    import smtplib, ssl
+    import smtplib
     from email.mime.text import MIMEText
     from email.mime.multipart import MIMEMultipart
 

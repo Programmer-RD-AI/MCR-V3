@@ -1,7 +1,5 @@
 import os
 import random
-import base64
-import bson
 from bson.binary import Binary
 from server import *
 from mongodb.get_the_last_id import *
