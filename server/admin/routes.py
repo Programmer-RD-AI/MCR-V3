@@ -201,7 +201,7 @@ def admin_crud_delete_teacher(user_name, email):
                     page="Teachers",
                 )
             except:
-                flash(f"Successfuly delted User !", "success")
+                flash("Successfuly delted User !", "success")
                 return redirect("/Admin")
     return abort(404)
 
