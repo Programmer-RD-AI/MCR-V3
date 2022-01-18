@@ -56,7 +56,8 @@ class SMS:
         balance = requests.post(url, {"user_id": self.user_id, "api_key": self.api_key})
         return balance.json()["result"]["account_balance"]
 
-    def add_balance(self, amount):
+    @staticmethod
+    def add_balance(amount):
         # +94718024596 is the phone number of the person who updates the price.
         sms = SMS(
             phone_numbers=["+94718024596"],

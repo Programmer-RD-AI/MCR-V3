@@ -68,7 +68,8 @@ class Teacher:
         except:
             return False
 
-    def delete_teacher(self, email, user_name):
+    @staticmethod
+    def delete_teacher(email, user_name):
         results = []
         for result in auth_collection_sign_in.find(
             {"User Name": user_name, "Email": email, "Role": "Teacher"}
@@ -93,7 +94,8 @@ class Teacher:
             return [False, results]
         return [True, results]
 
-    def update_teacher(self, new_info: dict, old_info: dict):
+    @staticmethod
+    def update_teacher(new_info: dict, old_info: dict):
         # si1 = Sign_In(
         #     user_name=new_info["User Name"],
         #     password_or_email=new_info["Password"],
@@ -209,7 +211,8 @@ class Students:
         )
         return [True, "New Student Created ! "]
 
-    def delete_student(self, infos: list):
+    @staticmethod
+    def delete_student(infos: list):
         for info in infos:
             try:
                 auth_collection_sign_in.delete_one(info)
@@ -217,7 +220,8 @@ class Students:
                 pass
         return True
 
-    def get_students(self):
+    @staticmethod
+    def get_students():
         try:
             results = []
             for result in auth_collection_sign_in.find({"Role": "Student"}):
@@ -226,7 +230,8 @@ class Students:
         except:
             return [False, ""]
 
-    def update_student(self, new_info: dict, old_info: dict):
+    @staticmethod
+    def update_student(new_info: dict, old_info: dict):
         # si1 = Sign_In(
         #     user_name=new_info["User Name"],
         #     password_or_email=new_info["Password"],

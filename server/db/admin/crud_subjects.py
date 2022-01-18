@@ -41,7 +41,8 @@ class Subjects:
         except:
             return False
 
-    def get_collections(self):
+    @staticmethod
+    def get_collections():
         try:
             results = subject_db.collection_names()
             string_results = " "
