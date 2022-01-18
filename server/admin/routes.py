@@ -1,17 +1,19 @@
-from server import *
-from server.db.admin.crud_users import *
-from server.db.admin.crud_subjects import *
-from server.db.notices import *
-from server import session
 import base64
-from server.db.home.autentication import *
-from server.db.admin.sms import SMS
-from server.db.admin.files import File_Admin
-from server.db.admin.stream import *
-from mongodb.get_the_last_id import *
-import numpy as np
-import matplotlib.pyplot as plt
 import pickle
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from mongodb.get_the_last_id import *
+from server import *
+from server import session
+from server.db.admin.crud_subjects import *
+from server.db.admin.crud_users import *
+from server.db.admin.files import File_Admin
+from server.db.admin.sms import SMS
+from server.db.admin.stream import *
+from server.db.home.autentication import *
+from server.db.notices import *
 
 
 def get_balance():
@@ -32,9 +34,9 @@ def admin_home():
     ]
     if all(conditions):
         if session["Role"] == "Admin":
-            return render_template(
-                "/admin/home.html", sms_balance=get_balance(), page="Home"
-            )
+            return render_template("/admin/home.html",
+                                   sms_balance=get_balance(),
+                                   page="Home")
     return abort(404)
 
 
@@ -93,21 +95,22 @@ def admin_crud_teacher():
         else:
             subjects = Subjects(subject="A")
             results = subjects.get_collections()
-            t = Teacher(
-                user_name="A", password="A", email="A", subject="A", whatsapp_number=0
-            )
+            t = Teacher(user_name="A",
+                        password="A",
+                        email="A",
+                        subject="A",
+                        whatsapp_number=0)
             final_results = []
             lenght_to_go = t.get_all_teachers()
             for info in lenght_to_go[0]:
                 get_teachers_result = info
                 get_teachers_result_ = {}
                 get_teachers_result_["User Name"] = encode_data(
-                    get_teachers_result["User Name"]
-                )
+                    get_teachers_result["User Name"])
                 get_teachers_result_["Email"] = encode_data(
-                    get_teachers_result["Email"]
-                )
-                final_results.append([get_teachers_result, get_teachers_result_])
+                    get_teachers_result["Email"])
+                final_results.append(
+                    [get_teachers_result, get_teachers_result_])
             print(final_results)
             try:
                 return render_template(
@@ -157,25 +160,21 @@ def admin_crud_delete_teacher(user_name, email):
     ]
     if all(conditions):
         if request.method == "POST":
-            t = Teacher(
-                user_name="", password="", email="", subject="", whatsapp_number=""
-            )
+            t = Teacher(user_name="",
+                        password="",
+                        email="",
+                        subject="",
+                        whatsapp_number="")
             result = t.delete_teacher(email=email, user_name=user_name)
             if result is True:
                 flash("Successfully deleted the teacher.", "success")
-                return redirect(
-                    "/Admin/CRUD/Teacher/Delete/"
-                    + encode_data(message=user_name)
-                    + "/"
-                    + encode_data(message=email)
-                )
+                return redirect("/Admin/CRUD/Teacher/Delete/" +
+                                encode_data(message=user_name) + "/" +
+                                encode_data(message=email))
             flash("AN error occurred ! ", "danger")
-            return redirect(
-                "/Admin/CRUD/Teacher/Delete/"
-                + encode_data(message=user_name)
-                + "/"
-                + encode_data(message=email)
-            )
+            return redirect("/Admin/CRUD/Teacher/Delete/" +
+                            encode_data(message=user_name) + "/" +
+                            encode_data(message=email))
         else:
             t = Teacher(
                 user_name=user_name,
@@ -218,7 +217,11 @@ def admin_crud_delete_teacher(user_name, email):
 def admin_crud_update_teacher(user_name, email):
     user_name = decode_data(user_name)
     email = decode_data(email)
-    t = Teacher(user_name="", password="", email="", subject="", whatsapp_number="")
+    t = Teacher(user_name="",
+                password="",
+                email="",
+                subject="",
+                whatsapp_number="")
     result = t.get_data_of_teacher(user_name=user_name, email=email)
     if result[0] is False:
         return abort(404)
@@ -345,17 +348,21 @@ def admin_crud_student():
                 flash(result[1], "danger")
             return redirect("/Admin/CRUD/Student")
         else:
-            s = Students(user_name="", password="", email="", whatsapp_number="")
+            s = Students(user_name="",
+                         password="",
+                         email="",
+                         whatsapp_number="")
             results = s.get_students()
             final = []
             for result in results[1]:
                 result_not_encoded = result
                 result_encoded = {}
                 result_encoded["User Name"] = encode_data(
-                    result_not_encoded["User Name"]
-                )
-                result_encoded["Password"] = encode_data(result_not_encoded["Password"])
-                result_encoded["Email"] = encode_data(result_not_encoded["Email"])
+                    result_not_encoded["User Name"])
+                result_encoded["Password"] = encode_data(
+                    result_not_encoded["Password"])
+                result_encoded["Email"] = encode_data(
+                    result_not_encoded["Email"])
                 print(result_not_encoded)
                 del result_not_encoded["_id"]
                 print([result_not_encoded, result_encoded])
@@ -389,9 +396,10 @@ def admin_crud_student():
 def admin_crud_update_student(user_name, email):
     user_name = decode_data(user_name)
     email = decode_data(email)
-    s = Students(
-        user_name=user_name, password=email + user_name, email=email, whatsapp_number=""
-    )
+    s = Students(user_name=user_name,
+                 password=email + user_name,
+                 email=email,
+                 whatsapp_number="")
     old_info = s.get_data_of_student(user_name=user_name, email=email)
     conditions = [
         "Auth" in session,
@@ -411,32 +419,23 @@ def admin_crud_update_student(user_name, email):
             new_whatsapp_number = request.form["WAN"]
             if new_role == "None":
                 flash("Please select a role ! ", "danger")
-                return redirect(
-                    "/Admin/CRUD/Student/Update/"
-                    + encode_data(user_name)
-                    + "/"
-                    + encode_data(email)
-                )
+                return redirect("/Admin/CRUD/Student/Update/" +
+                                encode_data(user_name) + "/" +
+                                encode_data(email))
             if new_subject != "None" or new_role == "Teacher":
                 if new_role != "Teacher":
                     flash(
                         "Please select teacher as the role if you want to make this student a teacher",
                         "danger",
                     )
-                    return redirect(
-                        "/Admin/CRUD/Student/Update/"
-                        + encode_data(user_name)
-                        + "/"
-                        + encode_data(email)
-                    )
+                    return redirect("/Admin/CRUD/Student/Update/" +
+                                    encode_data(user_name) + "/" +
+                                    encode_data(email))
                 if new_subject == "None":
                     flash("Please select a subject as a teacher ! ", "danger")
-                    return redirect(
-                        "/Admin/CRUD/Student/Update/"
-                        + encode_data(user_name)
-                        + "/"
-                        + encode_data(email)
-                    )
+                    return redirect("/Admin/CRUD/Student/Update/" +
+                                    encode_data(user_name) + "/" +
+                                    encode_data(email))
                 result_update_student = s.update_student(
                     new_info={
                         "User Name": new_user_name,
@@ -542,12 +541,9 @@ def admin_crud_delete_student(user_name, email):
             result_del = s.delete_student(infos=result[1])
             if result_del is False:
                 flash("An Error Occurred ! ", "danger")
-                return redirect(
-                    "/Admin/CRUD/Student/Delete/"
-                    + encode_data(user_name)
-                    + "/"
-                    + encode_data(email)
-                )
+                return redirect("/Admin/CRUD/Student/Delete/" +
+                                encode_data(user_name) + "/" +
+                                encode_data(email))
             flash("Deleted Successfully ! ", "success")
             return redirect("/Admin/CRUD/Student")
         else:
@@ -587,7 +583,8 @@ def admin_crud_subjects():
                 subject = request.form["S"]
                 sliced_result = subject.split()
                 if " " in sliced_result:
-                    flash("There cant be any spaces in the subject name !!", "danger")
+                    flash("There cant be any spaces in the subject name !!",
+                          "danger")
                     return redirect("/Admin/CRUD/Subject")
                 s = Subjects(subject=f"{subject}")
                 result = s.add_collection()
@@ -623,14 +620,14 @@ def admin_crud_subjects():
         return abort(505)
 
 
-@app.route("/Admin/CRUD/Subjects/Update/<string:subject_name>", methods=["POST", "GET"])
-@app.route(
-    "/Admin/CRUD/Subjects/Update/<string:subject_name>/", methods=["POST", "GET"]
-)
-@app.route("/Admin/CRUD/Subject/Update/<string:subject_name>", methods=["POST", "GET"])
-@app.route(
-    "/Admin/CRUD/Subjects/Update/<string:subject_name>/", methods=["POST", "GET"]
-)
+@app.route("/Admin/CRUD/Subjects/Update/<string:subject_name>",
+           methods=["POST", "GET"])
+@app.route("/Admin/CRUD/Subjects/Update/<string:subject_name>/",
+           methods=["POST", "GET"])
+@app.route("/Admin/CRUD/Subject/Update/<string:subject_name>",
+           methods=["POST", "GET"])
+@app.route("/Admin/CRUD/Subjects/Update/<string:subject_name>/",
+           methods=["POST", "GET"])
 def admin_crud_subjects_update(subject_name):
     old_subject_name = subject_name
     try:
@@ -654,8 +651,10 @@ def admin_crud_subjects_update(subject_name):
             subject = request.form["S"]
             sliced_result = subject.strip()
             if " " in sliced_result:
-                flash("There cant be any spaces in the subject name !!!", "dange")
-                return redirect("/Admin/CRUD/Subject/Update/" + old_subject_name)
+                flash("There cant be any spaces in the subject name !!!",
+                      "dange")
+                return redirect("/Admin/CRUD/Subject/Update/" +
+                                old_subject_name)
             s = Subjects(subject=subject)
             exists_result = s.check_if_exits()
             if exists_result is True:
@@ -663,7 +662,8 @@ def admin_crud_subjects_update(subject_name):
                     "There is another subject with the same name please try again later ! or you didn't change the subject name",
                     "danger",
                 )
-                return redirect("/Admin/CRUD/Subjects/Update/" + old_subject_name)
+                return redirect("/Admin/CRUD/Subjects/Update/" +
+                                old_subject_name)
             result = s.update_collection(subject_name)
             if result:
                 flash("Updated ! ", "success")
@@ -680,14 +680,14 @@ def admin_crud_subjects_update(subject_name):
     return abort(404)
 
 
-@app.route("/Admin/CRUD/Subjects/Delete/<string:subject_name>", methods=["POST", "GET"])
-@app.route(
-    "/Admin/CRUD/Subjects/Delete/<string:subject_name>/", methods=["POST", "GET"]
-)
-@app.route("/Admin/CRUD/Subject/Delete/<string:subject_name>", methods=["POST", "GET"])
-@app.route(
-    "/Admin/CRUD/Subjects/Delete/<string:subject_name>/", methods=["POST", "GET"]
-)
+@app.route("/Admin/CRUD/Subjects/Delete/<string:subject_name>",
+           methods=["POST", "GET"])
+@app.route("/Admin/CRUD/Subjects/Delete/<string:subject_name>/",
+           methods=["POST", "GET"])
+@app.route("/Admin/CRUD/Subject/Delete/<string:subject_name>",
+           methods=["POST", "GET"])
+@app.route("/Admin/CRUD/Subjects/Delete/<string:subject_name>/",
+           methods=["POST", "GET"])
 def admin_crud_subjects_delete(subject_name):
     old_subject_name = subject_name
     subject_name = decode_data(subject_name)
@@ -802,7 +802,8 @@ def crd_notices_delete(title, description):
                     return redirect("/Admin/CRD/Notices")
                 else:
                     flash("An error occured ! ", "danger")
-                    return redirect(f"/Admin/CRD/Notices/Delete/{title}/{description}")
+                    return redirect(
+                        f"/Admin/CRD/Notices/Delete/{title}/{description}")
             else:
                 return render_template(
                     "/admin/d_notice.html",
@@ -835,7 +836,10 @@ def register():
             if request.method == "POST":
                 pass
             else:
-                r = Register(user_name="", password="", whatsapp_number="", email="")
+                r = Register(user_name="",
+                             password="",
+                             whatsapp_number="",
+                             email="")
                 results = r.get_all_to_register_users()
                 return render_template(
                     "/admin/register.html",
@@ -866,7 +870,10 @@ def register_admit(_id):
     if all(conditions):
         if session["Role"] == "Admin":
             _id = int(_id)
-            r = Register(user_name="", password="", whatsapp_number="", email="")
+            r = Register(user_name="",
+                         password="",
+                         whatsapp_number="",
+                         email="")
             result = r.delete_user(_id=_id)
             if result[0] is True or result[1] != []:
                 print(result)
@@ -909,7 +916,10 @@ def register_reject(_id):
     if all(conditions):
         if session["Role"] == "Admin":
             _id = int(_id)
-            r = Register(user_name="", password="", whatsapp_number="", email="")
+            r = Register(user_name="",
+                         password="",
+                         whatsapp_number="",
+                         email="")
             result = r.get_user_info_from__id(_id=_id)
             if result[0] is True or result[1] != []:
                 send_email(
@@ -935,8 +945,8 @@ def register_reject(_id):
 
 def send_email(email, password, to_email, message, subject):
     import smtplib
-    from email.mime.text import MIMEText
     from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
 
     send_to_email = to_email
     msg = MIMEMultipart()
@@ -977,7 +987,10 @@ def sms():
                     flash("Please select a student.", "danger")
                     return redirect("/Admin/SMS")
                 print(ticked)
-                s = Students(user_name="", password="", email="", whatsapp_number="")
+                s = Students(user_name="",
+                             password="",
+                             email="",
+                             whatsapp_number="")
                 students = s.get_students()
                 students = students[1]
                 ticked_info = []
@@ -992,7 +1005,10 @@ def sms():
                 )
                 return redirect("/Admin/SMS")
             else:
-                s = Students(user_name="", password="", email="", whatsapp_number="")
+                s = Students(user_name="",
+                             password="",
+                             email="",
+                             whatsapp_number="")
                 kids = s.get_students()
                 names = []
                 for kid in kids[1]:
@@ -1036,7 +1052,8 @@ def files():
                 new_file_type = request.form["NFT"]
                 fa = File_Admin(file="", description="")
                 if new_file_type in fa.get_all_file_types():
-                    flash("There is another file type with the same name !", "danger")
+                    flash("There is another file type with the same name !",
+                          "danger")
                     return redirect("/Admin/File")
                 result = fa.add_file_type(new_file_type)
 
@@ -1158,21 +1175,20 @@ def file_type_update(file_type):
                 file_type_old = file_type
                 if file_type_new == file_type_old:
                     flash(
-                        "The new name and the old name are the exact same !!", "danger"
-                    )
+                        "The new name and the old name are the exact same !!",
+                        "danger")
                     return redirect(f"/Admin/File/{file_type}/Update")
-                f.update_file_type(
-                    old_file_name=file_type_old, new_file_name=file_type_new
-                )
+                f.update_file_type(old_file_name=file_type_old,
+                                   new_file_name=file_type_new)
                 flash(
                     f"Updated ! (Old : {file_type_old} | New : {file_type_new})",
                     "success",
                 )
                 return redirect("/Admin/File/")
             else:
-                return render_template(
-                    "/admin/file_update.html", page="Files", file_type=file_type
-                )
+                return render_template("/admin/file_update.html",
+                                       page="Files",
+                                       file_type=file_type)
         return abort(404)
     return abort(404)
 
@@ -1210,9 +1226,9 @@ def file_type_download(file_type, filename, desc):
             print("*+" * 100)
             print(result)
             print("*+" * 100)
-            return send_from_directory(
-                result[0], filename=result[1], as_attachment=True
-            )
+            return send_from_directory(result[0],
+                                       filename=result[1],
+                                       as_attachment=True)
 
 
 @app.route(
@@ -1245,9 +1261,9 @@ def file_type_view(file_type, filename, desc):
                 description=desc,
                 filename=filename,
             )
-            return send_from_directory(
-                result[0], filename=result[1], as_attachment=False
-            )
+            return send_from_directory(result[0],
+                                       filename=result[1],
+                                       as_attachment=False)
 
 
 @app.route(
@@ -1274,7 +1290,9 @@ def file_type_delete_file(file_type, filename, desc):
     if all(conditions):
         if session["Role"] == "Admin":
             f = File_Admin(file="", description=desc)
-            f.delete(description=desc, filename=filename, file_type_name=file_type)
+            f.delete(description=desc,
+                     filename=filename,
+                     file_type_name=file_type)
             flash("File Deleted Successfuly", "success")
             return redirect(f"/Admin/File/{file_type}")
     return abort(404)
@@ -1330,7 +1348,8 @@ def setting_admin_sign_in():
                         return redirect("/Admin/Log/Out")
                     return redirect("/Admin/Settings/Sign/In")
             else:
-                return render_template("/admin/setting_sign_in.html", page="Settings")
+                return render_template("/admin/setting_sign_in.html",
+                                       page="Settings")
 
 
 @app.route(
@@ -1383,7 +1402,8 @@ def setting_admin():
                 session.drop("Setting ?", None)
                 return redirect("/Admin/")
             else:
-                return render_template("/admin/setting_update.html", page="Settings")
+                return render_template("/admin/setting_update.html",
+                                       page="Settings")
 
 
 @app.route(
@@ -1531,37 +1551,32 @@ def predicting_marks_t1():
                 health = request.form["H"]
                 health_dict = {"Bad": 1, "Good": 5}
                 absent_days = request.form["AD"]
-                array = np.array(
-                    [
-                        [
-                            int(gender),
-                            int(age),
-                            int(family_size_dict[family_size]),
-                            int(mothers_education_dict[mothers_education]),
-                            int(fathers_education_dict[fathers_education]),
-                            int(mothers_job_dict[mothers_job]),
-                            int(fathers_job_dict[fathers_job]),
-                            int(guardian_dict[guardian]),
-                            int(study_time),
-                            int(exam_fails),
-                            int(school_support_dict[school_support]),
-                            int(family_support_dict[family_support]),
-                            int(extra_classes_dict[extra_classes]),
-                            int(extra_activites_dict[extra_activites]),
-                            int(internet_access_dict[internet_access]),
-                            int(go_out_dict[go_out]),
-                            int(health_dict[health]),
-                            int(absent_days),
-                        ]
-                    ]
-                )
+                array = np.array([[
+                    int(gender),
+                    int(age),
+                    int(family_size_dict[family_size]),
+                    int(mothers_education_dict[mothers_education]),
+                    int(fathers_education_dict[fathers_education]),
+                    int(mothers_job_dict[mothers_job]),
+                    int(fathers_job_dict[fathers_job]),
+                    int(guardian_dict[guardian]),
+                    int(study_time),
+                    int(exam_fails),
+                    int(school_support_dict[school_support]),
+                    int(family_support_dict[family_support]),
+                    int(extra_classes_dict[extra_classes]),
+                    int(extra_activites_dict[extra_activites]),
+                    int(internet_access_dict[internet_access]),
+                    int(go_out_dict[go_out]),
+                    int(health_dict[health]),
+                    int(absent_days),
+                ]])
                 array = array.reshape(1, -1)
                 model = pickle.load(
                     open(
                         "./ML/student-mark-predictions-1/1st_term_test_predictions_model.pkl",
                         "rb",
-                    )
-                )
+                    ))
                 result = model.predict(array)
                 print(result)
                 flash(
@@ -1570,7 +1585,8 @@ def predicting_marks_t1():
                 )
                 return redirect("/Admin")
             else:
-                return render_template("/admin/marks_predictions_t1.html", page="Marks")
+                return render_template("/admin/marks_predictions_t1.html",
+                                       page="Marks")
 
 
 @app.route(
@@ -1638,38 +1654,33 @@ def predicting_marks_t2():
                 health = request.form["H"]
                 health_dict = {"Bad": 1, "Good": 5}
                 absent_days = request.form["AD"]
-                array = np.array(
-                    [
-                        [
-                            int(gender),
-                            int(age),
-                            int(family_size_dict[family_size]),
-                            int(mothers_education_dict[mothers_education]),
-                            int(fathers_education_dict[fathers_education]),
-                            int(mothers_job_dict[mothers_job]),
-                            int(fathers_job_dict[fathers_job]),
-                            int(guardian_dict[guardian]),
-                            int(study_time),
-                            int(exam_fails),
-                            int(school_support_dict[school_support]),
-                            int(family_support_dict[family_support]),
-                            int(extra_classes_dict[extra_classes]),
-                            int(extra_activites_dict[extra_activites]),
-                            int(internet_access_dict[internet_access]),
-                            int(go_out_dict[go_out]),
-                            int(health_dict[health]),
-                            int(absent_days),
-                            int(term_1_marks),
-                        ]
-                    ]
-                )
+                array = np.array([[
+                    int(gender),
+                    int(age),
+                    int(family_size_dict[family_size]),
+                    int(mothers_education_dict[mothers_education]),
+                    int(fathers_education_dict[fathers_education]),
+                    int(mothers_job_dict[mothers_job]),
+                    int(fathers_job_dict[fathers_job]),
+                    int(guardian_dict[guardian]),
+                    int(study_time),
+                    int(exam_fails),
+                    int(school_support_dict[school_support]),
+                    int(family_support_dict[family_support]),
+                    int(extra_classes_dict[extra_classes]),
+                    int(extra_activites_dict[extra_activites]),
+                    int(internet_access_dict[internet_access]),
+                    int(go_out_dict[go_out]),
+                    int(health_dict[health]),
+                    int(absent_days),
+                    int(term_1_marks),
+                ]])
                 array = array.reshape(1, -1)
                 model = pickle.load(
                     open(
                         "./ML/student-mark-predictions-1/2nd_term_test_predictions_model.pkl",
                         "rb",
-                    )
-                )
+                    ))
                 result = model.predict(array)
                 print("*" * 100)
                 print(result)
@@ -1680,7 +1691,8 @@ def predicting_marks_t2():
                 )
                 return redirect("/Admin")
             else:
-                return render_template("/admin/marks_predictions_t2.html", page="Marks")
+                return render_template("/admin/marks_predictions_t2.html",
+                                       page="Marks")
 
 
 @app.route(
@@ -1749,39 +1761,34 @@ def predicting_marks_t3():
                 health = request.form["H"]
                 health_dict = {"Bad": 1, "Good": 5}
                 absent_days = request.form["AD"]
-                array = np.array(
-                    [
-                        [
-                            int(gender),
-                            int(age),
-                            int(family_size_dict[family_size]),
-                            int(mothers_education_dict[mothers_education]),
-                            int(fathers_education_dict[fathers_education]),
-                            int(mothers_job_dict[mothers_job]),
-                            int(fathers_job_dict[fathers_job]),
-                            int(guardian_dict[guardian]),
-                            int(study_time),
-                            int(exam_fails),
-                            int(school_support_dict[school_support]),
-                            int(family_support_dict[family_support]),
-                            int(extra_classes_dict[extra_classes]),
-                            int(extra_activites_dict[extra_activites]),
-                            int(internet_access_dict[internet_access]),
-                            int(go_out_dict[go_out]),
-                            int(health_dict[health]),
-                            int(absent_days),
-                            int(term_1_marks),
-                            int(term_2_marks),
-                        ]
-                    ]
-                )
+                array = np.array([[
+                    int(gender),
+                    int(age),
+                    int(family_size_dict[family_size]),
+                    int(mothers_education_dict[mothers_education]),
+                    int(fathers_education_dict[fathers_education]),
+                    int(mothers_job_dict[mothers_job]),
+                    int(fathers_job_dict[fathers_job]),
+                    int(guardian_dict[guardian]),
+                    int(study_time),
+                    int(exam_fails),
+                    int(school_support_dict[school_support]),
+                    int(family_support_dict[family_support]),
+                    int(extra_classes_dict[extra_classes]),
+                    int(extra_activites_dict[extra_activites]),
+                    int(internet_access_dict[internet_access]),
+                    int(go_out_dict[go_out]),
+                    int(health_dict[health]),
+                    int(absent_days),
+                    int(term_1_marks),
+                    int(term_2_marks),
+                ]])
                 array = array.reshape(1, -1)
                 model = pickle.load(
                     open(
                         "./ML/student-mark-predictions-1/3rd_term_test_predictions_model.pkl",
                         "rb",
-                    )
-                )
+                    ))
                 result = model.predict(array)
                 print("*" * 100)
                 print(result)
@@ -1792,7 +1799,8 @@ def predicting_marks_t3():
                 )
                 return redirect("/Admin")
             else:
-                return render_template("/admin/marks_predictions_t3.html", page="Marks")
+                return render_template("/admin/marks_predictions_t3.html",
+                                       page="Marks")
 
 
 @app.route(
@@ -1813,4 +1821,5 @@ def predicting_marks():
     ]
     if all(conditions):
         if session["Role"] == "Admin":
-            return render_template("/admin/marks_predictions.html", page="Marks")
+            return render_template("/admin/marks_predictions.html",
+                                   page="Marks")

@@ -1,5 +1,5 @@
-from server import *
 from mongodb.get_the_last_id import get_custom_last_id
+from server import *
 
 auth_db = cluster["Auth"]
 auth_collection_sign_in = auth_db["Auth-Sign-In"]
@@ -13,13 +13,11 @@ class Sign_In:
 
     def check_user_name_and_password(self):
         results = []
-        for result in auth_collection_sign_in.find(
-            {
+        for result in auth_collection_sign_in.find({
                 "User Name": self.user_name,
                 "Password": self.password_or_email,
                 "Role": self.role,
-            }
-        ):
+        }):
             results.append(result)
         if results == []:
             return False
@@ -27,13 +25,11 @@ class Sign_In:
 
     def check_user_name_and_email(self):
         results = []
-        for result in auth_collection_sign_in.find(
-            {
+        for result in auth_collection_sign_in.find({
                 "User Name": self.user_name,
                 "Email": self.password_or_email,
                 "Role": self.role,
-            }
-        ):
+        }):
             results.append(result)
         print(f"\n \n User Name and Email Results : {results} \n \n ")
         if results == []:
@@ -64,30 +60,27 @@ class Register:
 
     def check_if_it_exists(self):
         results_all = []
-        for result in auth_collection_sign_in.find(
-            {
+        for result in auth_collection_sign_in.find({
                 "User Name": self.user_name,
                 "Password": self.password,
                 "Whatsapp Number": self.whatsapp_number,
                 "Email": self.email,
-            }
-        ):
+        }):
             results_all.append(result)
         results_email_and_user_name = []
-        for result in auth_collection_sign_in.find(
-            {"User Name": self.user_name, "Email": self.email}
-        ):
+        for result in auth_collection_sign_in.find({
+                "User Name": self.user_name,
+                "Email": self.email
+        }):
             results_email_and_user_name.append(result)
         results_password_and_user_name = []
-        for result in auth_collection_sign_in.find(
-            {"User Name": self.user_name, "Password": self.password}
-        ):
+        for result in auth_collection_sign_in.find({
+                "User Name": self.user_name,
+                "Password": self.password
+        }):
             results_password_and_user_name.append(result)
-        if (
-            results_all == []
-            and results_email_and_user_name == []
-            and results_password_and_user_name == []
-        ):
+        if (results_all == [] and results_email_and_user_name == []
+                and results_password_and_user_name == []):
             return True
         return False
 
@@ -95,15 +88,13 @@ class Register:
         results = [self.check_if_it_exists()]
         if False not in results:
             _id = get_custom_last_id(db="Auth", collection="Register")
-            self.auth_collection_register.insert_one(
-                {
-                    "_id": _id,
-                    "User Name": self.user_name,
-                    "Password": self.password,
-                    "Whatsapp Number": self.whatsapp_number,
-                    "Email": self.email,
-                }
-            )
+            self.auth_collection_register.insert_one({
+                "_id": _id,
+                "User Name": self.user_name,
+                "Password": self.password,
+                "Whatsapp Number": self.whatsapp_number,
+                "Email": self.email,
+            })
             return [
                 True,
                 [

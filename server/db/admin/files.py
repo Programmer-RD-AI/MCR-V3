@@ -1,9 +1,11 @@
 import os
 import random
-from bson.binary import Binary
-from server import *
-from mongodb.get_the_last_id import *
 import shutil
+
+from bson.binary import Binary
+
+from mongodb.get_the_last_id import *
+from server import *
 
 
 class File_Admin:
@@ -17,19 +19,18 @@ class File_Admin:
         collection = self.db[str(file_type_name)]
         choice = random.randint(0, 1000000000000)
         if file.filename in os.listdir(
-            f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/files/{file_type_name}/"
+                f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/files/{file_type_name}/"
         ):
             file.filename = f"{choice}{file.filename}"
         file.save(
             os.path.join(
                 f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/files/{file_type_name}/",
                 file.filename,
-            )
-        )
+            ))
 
         with open(
-            f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/files/{file_type_name}/{file.filename}",
-            "rb",
+                f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/files/{file_type_name}/{file.filename}",
+                "rb",
         ) as f:
             encoded = Binary(f.read())
         _id = get_custom_last_id(db="File", collection=file_type_name)
@@ -43,15 +44,13 @@ class File_Admin:
                 results.append(result)
             if results != []:
                 _id = _id + 1
-        collection.insert_one(
-            {
-                "_id": _id,
-                "file": encoded,
-                "filename": self.file_2.filename,
-                "desc": self.description,
-                "file_type_name": file_type_name,
-            }
-        )
+        collection.insert_one({
+            "_id": _id,
+            "file": encoded,
+            "filename": self.file_2.filename,
+            "desc": self.description,
+            "file_type_name": file_type_name,
+        })
         os.remove(
             f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/files/{file_type_name}/{self.file.filename}"
         )
@@ -69,13 +68,11 @@ class File_Admin:
         results = []
         collection = self.db[str(file_type_name)]
         choice = random.randint(0, 100000000)
-        for result in collection.find(
-            {
+        for result in collection.find({
                 "filename": filename,
                 "desc": description,
                 # "file_type_name": file_type_name,
-            }
-        ):
+        }):
             results.append(result)
         print("*" * 100)
         print(results)
@@ -86,7 +83,7 @@ class File_Admin:
         # file.write("")
         # file.close()
         if file_type_name not in os.listdir(
-            f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/"
+                f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/"
         ):
             os.mkdir(
                 f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/{file_type_name}/"
@@ -97,8 +94,8 @@ class File_Admin:
         #     )
         try:
             with open(
-                f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/{file_type_name}/{results[0]['filename']}",
-                "wb",
+                    f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/{file_type_name}/{results[0]['filename']}",
+                    "wb",
             ) as file:
                 file.write(results[0]["file"])
         except:
@@ -110,13 +107,11 @@ class File_Admin:
 
     def delete(self, description, filename, file_type_name):
         collection = self.db[str(file_type_name)]
-        collection.delete_one(
-            {
-                "desc": description,
-                "filename": filename,
-                "file_type_name": file_type_name,
-            }
-        )
+        collection.delete_one({
+            "desc": description,
+            "filename": filename,
+            "file_type_name": file_type_name,
+        })
         return True
 
     def add_file_type(self, file_type_name):
