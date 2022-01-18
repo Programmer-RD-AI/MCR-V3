@@ -30,9 +30,10 @@ class Subjects:
             if self.subject in results:
                 self.collection.drop()
                 results_ = []
-                for result_ in auth_collection_sign_in.find(
-                    {"Subject": self.subject, "Role": "Teacher"}
-                ):
+                for result_ in auth_collection_sign_in.find({
+                        "Subject": self.subject,
+                        "Role": "Teacher"
+                }):
                     results_.append(result_)
                 for result_delete in results_:
                     auth_collection_sign_in.delete_one(result_delete)
@@ -41,7 +42,8 @@ class Subjects:
         except:
             return False
 
-    def get_collections(self):
+    @staticmethod
+    def get_collections():
         try:
             results = subject_db.collection_names()
             string_results = " "
@@ -59,9 +61,10 @@ class Subjects:
     def update_collection(self, old_name):
         subject_db[old_name].rename(self.subject)
         results = []
-        for result in auth_collection_sign_in.find(
-            {"Subject": old_name, "Role": "Teacher"}
-        ):
+        for result in auth_collection_sign_in.find({
+                "Subject": old_name,
+                "Role": "Teacher"
+        }):
             results.append(result)
         for result_ in results:
             new_values = {"$set": {"Subject": self.subject}}

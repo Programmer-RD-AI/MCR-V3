@@ -1,6 +1,7 @@
-from server import *
 import requests
+
 from mongodb.get_the_last_id import *
+from server import *
 
 
 class SMS:
@@ -36,13 +37,11 @@ class SMS:
         return [True, old_balance - new_balance]
 
     def add_logs(self):
-        self.collection.insert_one(
-            {
-                "_id": self.last_id,
-                "Phone Numbers": self.phone_numbers,
-                "Message": self.message,
-            }
-        )
+        self.collection.insert_one({
+            "_id": self.last_id,
+            "Phone Numbers": self.phone_numbers,
+            "Message": self.message,
+        })
         return True
 
     def get_logs(self):
@@ -53,10 +52,14 @@ class SMS:
 
     def get_balance(self):
         url = "http://sender.marxhal.com/api/v2/status.php"
-        balance = requests.post(url, {"user_id": self.user_id, "api_key": self.api_key})
+        balance = requests.post(url, {
+            "user_id": self.user_id,
+            "api_key": self.api_key
+        })
         return balance.json()["result"]["account_balance"]
 
-    def add_balance(self, amount):
+    @staticmethod
+    def add_balance(amount):
         # +94718024596 is the phone number of the person who updates the price.
         sms = SMS(
             phone_numbers=["+94718024596"],
