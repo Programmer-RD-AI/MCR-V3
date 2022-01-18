@@ -643,7 +643,7 @@ def admin_crud_subjects_update(subject_name):
     try:
         subject_name = decode_data(str(subject_name))
     except:
-        subject_name = subject_name
+        pass
     conditions = [
         "Auth" in session,
         "User Name" in session,
