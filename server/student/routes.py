@@ -1,9 +1,10 @@
 from server import *
 from server.db.admin.crud_subjects import *
 from server.db.admin.crud_users import *
-from server.db.notices import *
 from server.db.admin.files import *
 from server.db.admin.stream import *
+from server.db.notices import *
+
 
 @app.route("/Student")
 @app.route("/Student/")
@@ -60,7 +61,8 @@ def student_notices():
         ]
         if all(conditions):
             info = get_notices()
-            return render_template("/student/student_notices.html", notices=info)
+            return render_template("/student/student_notices.html",
+                                   notices=info)
         return abort(404)
     except:
         return abort(505)
@@ -102,10 +104,11 @@ def student_files(file_type):
     if all(conditions):
         f = File_Admin(file="", description="")
         files = f.get_all_files_in_a_file_type(file_type)
-        return render_template(
-            "/student/file.html", files=files, file_type=file_type
-        )
+        return render_template("/student/file.html",
+                               files=files,
+                               file_type=file_type)
     return abort(404)
+
 
 @app.route(
     "/Student/File/<string:file_type>/<string:filename>/<string:desc>/Download/",
@@ -140,9 +143,9 @@ def file_type_download_student(file_type, filename, desc):
             print("*+" * 100)
             print(result)
             print("*+" * 100)
-            return send_from_directory(
-                result[0], filename=result[1], as_attachment=True
-            )
+            return send_from_directory(result[0],
+                                       filename=result[1],
+                                       as_attachment=True)
 
 
 @app.route(
@@ -175,9 +178,10 @@ def file_type_view_student(file_type, filename, desc):
                 description=desc,
                 filename=filename,
             )
-            return send_from_directory(
-                result[0], filename=result[1], as_attachment=False
-            )
+            return send_from_directory(result[0],
+                                       filename=result[1],
+                                       as_attachment=False)
+
 
 @app.route(
     "/Student/Chat",
@@ -198,7 +202,7 @@ def chat():
     print("OK")
     if all(conditions):
         if session["Role"] == "Student":
-            if request.method == 'POST':
+            if request.method == "POST":
                 message = request.form["M"]
                 s = Stream(
                     message=message,
@@ -217,4 +221,3 @@ def chat():
                     messages=messages,
                     user_name=session["User Name"],
                 )
-

@@ -1,33 +1,52 @@
-{% extends '/admin/base.html' %}
-{% block head %}
+{% extends '/admin/base.html' %} {% block head %}
 <title>Admin Home</title>
 <style>
-    .card {
-        display: inline-block !important;
-    }
+  .card {
+    display: inline-block !important;
+  }
 </style>
-{% endblock %}
-{% block body %}
+{% endblock %} {% block body %}
 <div class="container">
-    <div class="jumbotron">
-        <form method="POST" action="">
-            <div class="form-group">
-                <label for="user_name"><b> New User Name (Name) </b></label>
-                <input type="text" name="NUN" required placeholder="New User Name" class="form-control"
-                    id="user_name" aria-describedby="emailHelp">
-            </div>
-            <div class="form-group">
-                <label for="user_name"><b> New Email </b></label>
-                <input type="text" name="NE" required placeholder="New Email" class="form-control"
-                    id="user_name" aria-describedby="emailHelp">
-            </div>
-            <div class="form-group">
-                <label for="password"><b> New Password</b></label>
-                <input type="text" name="NP" required class="form-control" id="password" required
-                    placeholder="New Password">
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-        </form>
-    </div>
+  <div class="jumbotron">
+    <form method="POST" action="">
+      <div class="form-group">
+        <label for="user_name"><b> New User Name (Name) </b></label>
+        <input
+          type="text"
+          name="NUN"
+          required
+          placeholder="New User Name"
+          class="form-control"
+          id="user_name"
+          aria-describedby="emailHelp"
+        />
+      </div>
+      <div class="form-group">
+        <label for="user_name"><b> New Email </b></label>
+        <input
+          type="text"
+          name="NE"
+          required
+          placeholder="New Email"
+          class="form-control"
+          id="user_name"
+          aria-describedby="emailHelp"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password"><b> New Password</b></label>
+        <input
+          type="text"
+          name="NP"
+          required
+          class="form-control"
+          id="password"
+          required
+          placeholder="New Password"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

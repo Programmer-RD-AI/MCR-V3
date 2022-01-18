@@ -1,47 +1,61 @@
-{% extends '/admin/base.html' %}
-{% block head %}
+{% extends '/admin/base.html' %} {% block head %}
 <title>Admin Files</title>
 <style>
-    .card {
-        display: inline-block !important;
-    }
+  .card {
+    display: inline-block !important;
+  }
 </style>
-{% endblock %}
-{% block body %}
+{% endblock %} {% block body %}
 <div class="container">
-    <div class="jumbotron">
-        <form method="POST" enctype="multipart/form-data">
-            <label>Select image</label>
-            <div class="custom-file">
-                <input type="file" required class="custom-file-input" name="F" id="F">
-                <label class="custom-file-label" for="F">Select File...</label>
-            </div>
-            <br>
-            <div class="form-group">
-                <label for="D">Description</label>
-                <input required name="D" placeholder="Description" type="text" class="form-control" id="D">
-            </div>
-            <button type="submit" class="btn btn-primary">Add New File Type</button>
-        </form>
-        <br>
-        {% for file in files %}
-        <div class="jumbotron" style="background-color: lightgray;">
-            <h4><b>File Name : {{file['filename']}}</b></h4>
-            <h4><b>Description : {{file['desc']}}</b></h4>
-            <h4><b>File Owner Category : {{file['file_type_name']}}</b></h4>
-            <br>
-            <a href="/Admin/File/{{file_type}}/{{file['filename']}}/{{file['desc']}}/Delete"
-                class="btn btn-danger">Delete</a>
-            <br>
-            <br>
-            <a href="/Admin/File/{{file_type}}/{{file['filename']}}/{{file['desc']}}/Download"
-                class="btn btn-primary">Download</a>
-            <br>
-            <br>
-            <a href="/Admin/File/{{file_type}}/{{file['filename']}}/{{file['desc']}}/View"
-                class="btn btn-primary">View</a>
-        </div>
-        {% endfor %}
+  <div class="jumbotron">
+    <form method="POST" enctype="multipart/form-data">
+      <label>Select image</label>
+      <div class="custom-file">
+        <input type="file" required class="custom-file-input" name="F" id="F" />
+        <label class="custom-file-label" for="F">Select File...</label>
+      </div>
+      <br />
+      <div class="form-group">
+        <label for="D">Description</label>
+        <input
+          required
+          name="D"
+          placeholder="Description"
+          type="text"
+          class="form-control"
+          id="D"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Add New File Type</button>
+    </form>
+    <br />
+    {% for file in files %}
+    <div class="jumbotron" style="background-color: lightgray">
+      <h4><b>File Name : {{file['filename']}}</b></h4>
+      <h4><b>Description : {{file['desc']}}</b></h4>
+      <h4><b>File Owner Category : {{file['file_type_name']}}</b></h4>
+      <br />
+      <a
+        href="/Admin/File/{{file_type}}/{{file['filename']}}/{{file['desc']}}/Delete"
+        class="btn btn-danger"
+        >Delete</a
+      >
+      <br />
+      <br />
+      <a
+        href="/Admin/File/{{file_type}}/{{file['filename']}}/{{file['desc']}}/Download"
+        class="btn btn-primary"
+        >Download</a
+      >
+      <br />
+      <br />
+      <a
+        href="/Admin/File/{{file_type}}/{{file['filename']}}/{{file['desc']}}/View"
+        class="btn btn-primary"
+        >View</a
+      >
     </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}
