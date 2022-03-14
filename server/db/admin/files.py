@@ -83,7 +83,7 @@ class File_Admin:
         # file.write("")
         # file.close()
         if file_type_name not in os.listdir(
-                f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/"
+                "/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/"
         ):
             os.mkdir(
                 f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/{file_type_name}/"
