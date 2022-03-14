@@ -19,7 +19,6 @@ class SMS:
     def send(self):
         old_balance = float(self.get_balance())
         for phone_number in self.phone_numbers:
-            # phone_number = "+" + str(phone_number)
             print(phone_number)
             result = requests.post(
                 self.url,

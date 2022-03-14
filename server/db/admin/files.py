@@ -77,21 +77,12 @@ class File_Admin:
         print("*" * 100)
         print(results)
         print("+" * 100)
-        # file = open(f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/{file_type_name}/{results[0]['filename']}",
-        # "w",
-        # )
-        # file.write("")
-        # file.close()
         if file_type_name not in os.listdir(
                 f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/"
         ):
             os.mkdir(
                 f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/{file_type_name}/"
             )
-        # except:
-        #     os.mkdir(
-        #         f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/{file_type_name}"
-        #     )
         try:
             with open(
                     f"/home/ranuga/Programming/Projects/Python/Flask/Done/My-Class-Room-V2/file/{file_type_name}/{results[0]['filename']}",
