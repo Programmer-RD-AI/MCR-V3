@@ -129,20 +129,19 @@ def file_type_download_student(file_type, filename, desc):
     print("OK")
     if file_type not in f.get_all_file_types():
         return abort(404)
-    if all(conditions):
-        if session["Role"] == "Student":
-            f = File_Admin(file="", description=desc)
-            result = f.get(
-                file_type_name=file_type,
-                description=desc,
-                filename=filename,
-            )
-            print("*+" * 100)
-            print(result)
-            print("*+" * 100)
-            return send_from_directory(
-                result[0], filename=result[1], as_attachment=True
-            )
+    if all(conditions) and session["Role"] == "Student":
+        f = File_Admin(file="", description=desc)
+        result = f.get(
+            file_type_name=file_type,
+            description=desc,
+            filename=filename,
+        )
+        print("*+" * 100)
+        print(result)
+        print("*+" * 100)
+        return send_from_directory(
+            result[0], filename=result[1], as_attachment=True
+        )
 
 
 @app.route(
@@ -167,17 +166,16 @@ def file_type_view_student(file_type, filename, desc):
     print("OK")
     if file_type not in f.get_all_file_types():
         return abort(404)
-    if all(conditions):
-        if session["Role"] == "Student":
-            f = File_Admin(file="", description=desc)
-            result = f.get(
-                file_type_name=file_type,
-                description=desc,
-                filename=filename,
-            )
-            return send_from_directory(
-                result[0], filename=result[1], as_attachment=False
-            )
+    if all(conditions) and session["Role"] == "Student":
+        f = File_Admin(file="", description=desc)
+        result = f.get(
+            file_type_name=file_type,
+            description=desc,
+            filename=filename,
+        )
+        return send_from_directory(
+            result[0], filename=result[1], as_attachment=False
+        )
 
 @app.route(
     "/Student/Chat",
@@ -196,25 +194,24 @@ def chat():
         "Returned Data" in session,
     ]
     print("OK")
-    if all(conditions):
-        if session["Role"] == "Student":
-            if request.method == 'POST':
-                message = request.form["M"]
-                s = Stream(
-                    message=message,
-                    user_name=session["User Name"],
-                    role=session["Role"],
-                )
-                s.add()
-                return redirect("/Student/Chat")
-            else:
-                messages = Stream(message="", user_name="", role="")
-                messages = messages.get()
-                messages = messages[::-1]
-                return render_template(
-                    "/student/chat.html",
-                    page="Chat",
-                    messages=messages,
-                    user_name=session["User Name"],
-                )
+    if all(conditions) and session["Role"] == "Student":
+        if request.method == 'POST':
+            message = request.form["M"]
+            s = Stream(
+                message=message,
+                user_name=session["User Name"],
+                role=session["Role"],
+            )
+            s.add()
+            return redirect("/Student/Chat")
+        else:
+            messages = Stream(message="", user_name="", role="")
+            messages = messages.get()
+            messages = messages[::-1]
+            return render_template(
+                "/student/chat.html",
+                page="Chat",
+                messages=messages,
+                user_name=session["User Name"],
+            )
 
