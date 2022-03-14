@@ -32,11 +32,10 @@ def admin_home():
         "Role" in session,
         "Returned Data" in session,
     ]
-    if all(conditions):
-        if session["Role"] == "Admin":
-            return render_template("/admin/home.html",
-                                   sms_balance=get_balance(),
-                                   page="Home")
+    if all(conditions) and session["Role"] == "Admin":
+        return render_template("/admin/home.html",
+                               sms_balance=get_balance(),
+                               page="Home")
     return abort(404)
 
 
@@ -1215,20 +1214,19 @@ def file_type_download(file_type, filename, desc):
     print("OK")
     if file_type not in f.get_all_file_types():
         return abort(404)
-    if all(conditions):
-        if session["Role"] == "Admin":
-            f = File_Admin(file="", description=desc)
-            result = f.get(
-                file_type_name=file_type,
-                description=desc,
-                filename=filename,
-            )
-            print("*+" * 100)
-            print(result)
-            print("*+" * 100)
-            return send_from_directory(result[0],
-                                       filename=result[1],
-                                       as_attachment=True)
+    if all(conditions) and session["Role"] == "Admin":
+        f = File_Admin(file="", description=desc)
+        result = f.get(
+            file_type_name=file_type,
+            description=desc,
+            filename=filename,
+        )
+        print("*+" * 100)
+        print(result)
+        print("*+" * 100)
+        return send_from_directory(result[0],
+                                   filename=result[1],
+                                   as_attachment=True)
 
 
 @app.route(
@@ -1253,17 +1251,16 @@ def file_type_view(file_type, filename, desc):
     print("OK")
     if file_type not in f.get_all_file_types():
         return abort(404)
-    if all(conditions):
-        if session["Role"] == "Admin":
-            f = File_Admin(file="", description=desc)
-            result = f.get(
-                file_type_name=file_type,
-                description=desc,
-                filename=filename,
-            )
-            return send_from_directory(result[0],
-                                       filename=result[1],
-                                       as_attachment=False)
+    if all(conditions) and session["Role"] == "Admin":
+        f = File_Admin(file="", description=desc)
+        result = f.get(
+            file_type_name=file_type,
+            description=desc,
+            filename=filename,
+        )
+        return send_from_directory(result[0],
+                                   filename=result[1],
+                                   as_attachment=False)
 
 
 @app.route(
@@ -1287,14 +1284,11 @@ def file_type_delete_file(file_type, filename, desc):
         return abort(404)
     if file_type not in f.get_all_file_types():
         return abort(404)
-    if all(conditions):
-        if session["Role"] == "Admin":
-            f = File_Admin(file="", description=desc)
-            f.delete(description=desc,
-                     filename=filename,
-                     file_type_name=file_type)
-            flash("File Deleted Successfuly", "success")
-            return redirect(f"/Admin/File/{file_type}")
+    if all(conditions) and session["Role"] == "Admin":
+        f = File_Admin(file="", description=desc)
+        f.delete(description=desc, filename=filename, file_type_name=file_type)
+        flash("File Deleted Successfuly", "success")
+        return redirect(f"/Admin/File/{file_type}")
     return abort(404)
 
 
@@ -1322,34 +1316,33 @@ def setting_admin_sign_in():
         "Role" in session,
         "Returned Data" in session,
     ]
-    if all(conditions):
-        if session["Role"] == "Admin":
-            if request.method == "POST":
-                user_name = request.form["UN"]
-                password_or_email = request.form["POE"]
-                si = Sign_In(
-                    user_name=user_name,
-                    password_or_email=password_or_email,
-                    role="Admin",
-                )
-                result = si.check()
-                if result[0] is True:
-                    flash("Autenticated Successfully !", "success")
-                    session["Settings ?"] = True
-                    return redirect("/Admin/Settings")
-                else:
-                    flash("Autentication failed !", "danger")
-                    try:
-                        session["Setting Try"] = session["Setting Try"] + 1
-                    except:
-                        session["Setting Try"] = 0
-                    if session["Setting Try"] == 2:
-                        flash("You tried 3 time !", "danger")
-                        return redirect("/Admin/Log/Out")
-                    return redirect("/Admin/Settings/Sign/In")
+    if all(conditions) and session["Role"] == "Admin":
+        if request.method == "POST":
+            user_name = request.form["UN"]
+            password_or_email = request.form["POE"]
+            si = Sign_In(
+                user_name=user_name,
+                password_or_email=password_or_email,
+                role="Admin",
+            )
+            result = si.check()
+            if result[0] is True:
+                flash("Autenticated Successfully !", "success")
+                session["Settings ?"] = True
+                return redirect("/Admin/Settings")
             else:
-                return render_template("/admin/setting_sign_in.html",
-                                       page="Settings")
+                flash("Autentication failed !", "danger")
+                try:
+                    session["Setting Try"] = session["Setting Try"] + 1
+                except:
+                    session["Setting Try"] = 0
+                if session["Setting Try"] == 2:
+                    flash("You tried 3 time !", "danger")
+                    return redirect("/Admin/Log/Out")
+                return redirect("/Admin/Settings/Sign/In")
+        else:
+            return render_template("/admin/setting_sign_in.html",
+                                   page="Settings")
 
 
 @app.route(
@@ -1376,34 +1369,34 @@ def setting_admin():
         "Role" in session,
         "Returned Data" in session,
     ]
-    if all(conditions):
-        if session["Role"] == "Admin" and session["Settings ?"] is True:
-            if request.method == "POST":
-                new_user_name = request.form["NUN"]
-                new_password = request.form["NP"]
-                new_email = request.form["NE"]
-                setting_db = cluster["Auth"]
-                setting_collection = setting_db["Auth-Sign-In"]
-                old_info = ""
-                results = []
-                for result in setting_collection.find({"Role": "Admin"}):
-                    results.append(result)
-                old_info = results[0]
-                new_info = {}
-                _id = get_custom_last_id(db="Auth", collection="Auth-Sign-In")
-                new_info["User Name"] = new_user_name
-                new_info["Password"] = new_password
-                new_info["Email"] = new_email
-                new_info["_id"] = _id
-                new_info["Role"] = "Admin"
-                setting_collection.delete_one(old_info)
-                setting_collection.insert_one(new_info)
-                flash("Updated", "success")
-                session.drop("Setting ?", None)
-                return redirect("/Admin/")
-            else:
-                return render_template("/admin/setting_update.html",
-                                       page="Settings")
+    if all(conditions
+           ) and session["Role"] == "Admin" and session["Settings ?"] is True:
+        if request.method == "POST":
+            new_user_name = request.form["NUN"]
+            new_password = request.form["NP"]
+            new_email = request.form["NE"]
+            setting_db = cluster["Auth"]
+            setting_collection = setting_db["Auth-Sign-In"]
+            old_info = ""
+            results = []
+            for result in setting_collection.find({"Role": "Admin"}):
+                results.append(result)
+            old_info = results[0]
+            new_info = {}
+            _id = get_custom_last_id(db="Auth", collection="Auth-Sign-In")
+            new_info["User Name"] = new_user_name
+            new_info["Password"] = new_password
+            new_info["Email"] = new_email
+            new_info["_id"] = _id
+            new_info["Role"] = "Admin"
+            setting_collection.delete_one(old_info)
+            setting_collection.insert_one(new_info)
+            flash("Updated", "success")
+            session.drop("Setting ?", None)
+            return redirect("/Admin/")
+        else:
+            return render_template("/admin/setting_update.html",
+                                   page="Settings")
 
 
 @app.route(
@@ -1430,27 +1423,26 @@ def chat_admin():
         "Role" in session,
         "Returned Data" in session,
     ]
-    if all(conditions):
-        if session["Role"] == "Admin":
-            if request.method == "POST":
-                message = request.form["M"]
-                s = Stream(
-                    message=message,
-                    user_name=session["User Name"],
-                    role=session["Role"],
-                )
-                s.add()
-                return redirect("/Admin/Chat")
-            else:
-                messages = Stream(message="", user_name="", role="")
-                messages = messages.get()
-                messages = messages[::-1]
-                return render_template(
-                    "/admin/chat.html",
-                    page="Chat",
-                    messages=messages,
-                    user_name=session["User Name"],
-                )
+    if all(conditions) and session["Role"] == "Admin":
+        if request.method == "POST":
+            message = request.form["M"]
+            s = Stream(
+                message=message,
+                user_name=session["User Name"],
+                role=session["Role"],
+            )
+            s.add()
+            return redirect("/Admin/Chat")
+        else:
+            messages = Stream(message="", user_name="", role="")
+            messages = messages.get()
+            messages = messages[::-1]
+            return render_template(
+                "/admin/chat.html",
+                page="Chat",
+                messages=messages,
+                user_name=session["User Name"],
+            )
 
 
 @app.route(
@@ -1477,14 +1469,13 @@ def chat_admin_delete(_id):
         "Role" in session,
         "Returned Data" in session,
     ]
-    if all(conditions):
-        if session["Role"] == "Admin":
-            s = Stream(message="", user_name="", role="")
-            result = s.delete(_id, session["Role"])
-            if result != True:
-                return redirect("/Admin/Log/Out")
-            flash("Deleted successfuly", "success")
-            return redirect("/Admin/Chat/")
+    if all(conditions) and session["Role"] == "Admin":
+        s = Stream(message="", user_name="", role="")
+        result = s.delete(_id, session["Role"])
+        if result is not True:
+            return redirect("/Admin/Log/Out")
+        flash("Deleted successfuly", "success")
+        return redirect("/Admin/Chat/")
 
 
 @app.route(
@@ -1503,90 +1494,89 @@ def predicting_marks_t1():
         "Role" in session,
         "Returned Data" in session,
     ]
-    if all(conditions):
-        if session["Role"] == "Admin":
-            if request.method == "POST":
-                gender = request.form["Ge"]
-                gender_dict = {"Female": 0, "Male": 1}
-                gender = gender_dict[gender]
-                age = int(request.form["A"])
-                family_size = request.form["FS"]
-                family_size_dict = {"Less Than 3": 1, "Bigger Than 3": 0}
-                mothers_education = request.form["ME"]
-                mothers_education_dict = {"None": 0, "Higher Education": 4}
-                fathers_education = request.form["FE"]
-                fathers_education_dict = {"None": 0, "Higher Education": 4}
-                mothers_job = request.form["MJ"]
-                mothers_job_dict = {
-                    "At Home": 0,
-                    "Health": 1,
-                    "Other": 2,
-                    "Services": 3,
-                    "Teachers": 4,
-                }
-                fathers_job = request.form["FJ"]
-                fathers_job_dict = {
-                    "Teachers": 0,
-                    "Other": 1,
-                    "Services": 2,
-                    "Health": 3,
-                    "At Home": 4,
-                }
-                guardian = request.form["G"]
-                guardian_dict = {"Mother": 0, "Father": 1, "Other": 2}
-                study_time = int(request.form["ST"])
-                exam_fails = int(request.form["EF"])
-                school_support = request.form["SS"]
-                school_support_dict = {"Yes": 0, "No": 1}
-                family_support = request.form["FSS"]
-                family_support_dict = {"No": 0, "Yes": 1}
-                extra_classes = request.form["EC"]
-                extra_classes_dict = {"No": 0, "Yes": 1}
-                extra_activites = request.form["EA"]
-                extra_activites_dict = {"No": 0, "Yes": 1}
-                internet_access = request.form["IA"]
-                internet_access_dict = {"No": 0, "Yes": 1}
-                go_out = request.form["GO"]
-                go_out_dict = {"Not Alot": 1, "Alot": 5}
-                health = request.form["H"]
-                health_dict = {"Bad": 1, "Good": 5}
-                absent_days = request.form["AD"]
-                array = np.array([[
-                    int(gender),
-                    int(age),
-                    int(family_size_dict[family_size]),
-                    int(mothers_education_dict[mothers_education]),
-                    int(fathers_education_dict[fathers_education]),
-                    int(mothers_job_dict[mothers_job]),
-                    int(fathers_job_dict[fathers_job]),
-                    int(guardian_dict[guardian]),
-                    int(study_time),
-                    int(exam_fails),
-                    int(school_support_dict[school_support]),
-                    int(family_support_dict[family_support]),
-                    int(extra_classes_dict[extra_classes]),
-                    int(extra_activites_dict[extra_activites]),
-                    int(internet_access_dict[internet_access]),
-                    int(go_out_dict[go_out]),
-                    int(health_dict[health]),
-                    int(absent_days),
-                ]])
-                array = array.reshape(1, -1)
-                model = pickle.load(
-                    open(
-                        "./ML/student-mark-predictions-1/1st_term_test_predictions_model.pkl",
-                        "rb",
-                    ))
-                result = model.predict(array)
-                print(result)
-                flash(
-                    f"1st term Marks : {round(result[0][1])} | 2nd Term Marks : {round(result[0][2])} | 3rd Term Marks : {round(result[0][3])}",
-                    "success",
-                )
-                return redirect("/Admin")
-            else:
-                return render_template("/admin/marks_predictions_t1.html",
-                                       page="Marks")
+    if all(conditions) and session["Role"] == "Admin":
+        if request.method == "POST":
+            gender = request.form["Ge"]
+            gender_dict = {"Female": 0, "Male": 1}
+            gender = gender_dict[gender]
+            age = int(request.form["A"])
+            family_size = request.form["FS"]
+            family_size_dict = {"Less Than 3": 1, "Bigger Than 3": 0}
+            mothers_education = request.form["ME"]
+            mothers_education_dict = {"None": 0, "Higher Education": 4}
+            fathers_education = request.form["FE"]
+            fathers_education_dict = {"None": 0, "Higher Education": 4}
+            mothers_job = request.form["MJ"]
+            mothers_job_dict = {
+                "At Home": 0,
+                "Health": 1,
+                "Other": 2,
+                "Services": 3,
+                "Teachers": 4,
+            }
+            fathers_job = request.form["FJ"]
+            fathers_job_dict = {
+                "Teachers": 0,
+                "Other": 1,
+                "Services": 2,
+                "Health": 3,
+                "At Home": 4,
+            }
+            guardian = request.form["G"]
+            guardian_dict = {"Mother": 0, "Father": 1, "Other": 2}
+            study_time = int(request.form["ST"])
+            exam_fails = int(request.form["EF"])
+            school_support = request.form["SS"]
+            school_support_dict = {"Yes": 0, "No": 1}
+            family_support = request.form["FSS"]
+            family_support_dict = {"No": 0, "Yes": 1}
+            extra_classes = request.form["EC"]
+            extra_classes_dict = {"No": 0, "Yes": 1}
+            extra_activites = request.form["EA"]
+            extra_activites_dict = {"No": 0, "Yes": 1}
+            internet_access = request.form["IA"]
+            internet_access_dict = {"No": 0, "Yes": 1}
+            go_out = request.form["GO"]
+            go_out_dict = {"Not Alot": 1, "Alot": 5}
+            health = request.form["H"]
+            health_dict = {"Bad": 1, "Good": 5}
+            absent_days = request.form["AD"]
+            array = np.array([[
+                int(gender),
+                int(age),
+                int(family_size_dict[family_size]),
+                int(mothers_education_dict[mothers_education]),
+                int(fathers_education_dict[fathers_education]),
+                int(mothers_job_dict[mothers_job]),
+                int(fathers_job_dict[fathers_job]),
+                int(guardian_dict[guardian]),
+                int(study_time),
+                int(exam_fails),
+                int(school_support_dict[school_support]),
+                int(family_support_dict[family_support]),
+                int(extra_classes_dict[extra_classes]),
+                int(extra_activites_dict[extra_activites]),
+                int(internet_access_dict[internet_access]),
+                int(go_out_dict[go_out]),
+                int(health_dict[health]),
+                int(absent_days),
+            ]])
+            array = array.reshape(1, -1)
+            model = pickle.load(
+                open(
+                    "./ML/student-mark-predictions-1/1st_term_test_predictions_model.pkl",
+                    "rb",
+                ))
+            result = model.predict(array)
+            print(result)
+            flash(
+                f"1st term Marks : {round(result[0][1])} | 2nd Term Marks : {round(result[0][2])} | 3rd Term Marks : {round(result[0][3])}",
+                "success",
+            )
+            return redirect("/Admin")
+        else:
+            return render_template("/admin/marks_predictions_t1.html",
+                                   page="Marks")
 
 
 @app.route(
@@ -1605,94 +1595,93 @@ def predicting_marks_t2():
         "Role" in session,
         "Returned Data" in session,
     ]
-    if all(conditions):
-        if session["Role"] == "Admin":
-            if request.method == "POST":
-                gender = request.form["Ge"]
-                gender_dict = {"Female": 0, "Male": 1}
-                gender = gender_dict[gender]
-                age = int(request.form["A"])
-                family_size = request.form["FS"]
-                family_size_dict = {"Less Than 3": 1, "Bigger Than 3": 0}
-                mothers_education = request.form["ME"]
-                mothers_education_dict = {"None": 0, "Higher Education": 4}
-                fathers_education = request.form["FE"]
-                fathers_education_dict = {"None": 0, "Higher Education": 4}
-                mothers_job = request.form["MJ"]
-                mothers_job_dict = {
-                    "At Home": 0,
-                    "Health": 1,
-                    "Other": 2,
-                    "Services": 3,
-                    "Teachers": 4,
-                }
-                fathers_job = request.form["FJ"]
-                fathers_job_dict = {
-                    "Teachers": 0,
-                    "Other": 1,
-                    "Services": 2,
-                    "Health": 3,
-                    "At Home": 4,
-                }
-                term_1_marks = request.form["T1"]
-                guardian = request.form["G"]
-                guardian_dict = {"Mother": 0, "Father": 1, "Other": 2}
-                study_time = int(request.form["ST"])
-                exam_fails = int(request.form["EF"])
-                school_support = request.form["SS"]
-                school_support_dict = {"Yes": 0, "No": 1}
-                family_support = request.form["FSS"]
-                family_support_dict = {"No": 0, "Yes": 1}
-                extra_classes = request.form["EC"]
-                extra_classes_dict = {"No": 0, "Yes": 1}
-                extra_activites = request.form["EA"]
-                extra_activites_dict = {"No": 0, "Yes": 1}
-                internet_access = request.form["IA"]
-                internet_access_dict = {"No": 0, "Yes": 1}
-                go_out = request.form["GO"]
-                go_out_dict = {"Not Alot": 1, "Alot": 5}
-                health = request.form["H"]
-                health_dict = {"Bad": 1, "Good": 5}
-                absent_days = request.form["AD"]
-                array = np.array([[
-                    int(gender),
-                    int(age),
-                    int(family_size_dict[family_size]),
-                    int(mothers_education_dict[mothers_education]),
-                    int(fathers_education_dict[fathers_education]),
-                    int(mothers_job_dict[mothers_job]),
-                    int(fathers_job_dict[fathers_job]),
-                    int(guardian_dict[guardian]),
-                    int(study_time),
-                    int(exam_fails),
-                    int(school_support_dict[school_support]),
-                    int(family_support_dict[family_support]),
-                    int(extra_classes_dict[extra_classes]),
-                    int(extra_activites_dict[extra_activites]),
-                    int(internet_access_dict[internet_access]),
-                    int(go_out_dict[go_out]),
-                    int(health_dict[health]),
-                    int(absent_days),
-                    int(term_1_marks),
-                ]])
-                array = array.reshape(1, -1)
-                model = pickle.load(
-                    open(
-                        "./ML/student-mark-predictions-1/2nd_term_test_predictions_model.pkl",
-                        "rb",
-                    ))
-                result = model.predict(array)
-                print("*" * 100)
-                print(result)
-                print("*" * 100)
-                flash(
-                    f"2nd Term Marks : {result[0][0]} | 3rd Term Marks : {result[0][1]}",
-                    "success",
-                )
-                return redirect("/Admin")
-            else:
-                return render_template("/admin/marks_predictions_t2.html",
-                                       page="Marks")
+    if all(conditions) and session["Role"] == "Admin":
+        if request.method == "POST":
+            gender = request.form["Ge"]
+            gender_dict = {"Female": 0, "Male": 1}
+            gender = gender_dict[gender]
+            age = int(request.form["A"])
+            family_size = request.form["FS"]
+            family_size_dict = {"Less Than 3": 1, "Bigger Than 3": 0}
+            mothers_education = request.form["ME"]
+            mothers_education_dict = {"None": 0, "Higher Education": 4}
+            fathers_education = request.form["FE"]
+            fathers_education_dict = {"None": 0, "Higher Education": 4}
+            mothers_job = request.form["MJ"]
+            mothers_job_dict = {
+                "At Home": 0,
+                "Health": 1,
+                "Other": 2,
+                "Services": 3,
+                "Teachers": 4,
+            }
+            fathers_job = request.form["FJ"]
+            fathers_job_dict = {
+                "Teachers": 0,
+                "Other": 1,
+                "Services": 2,
+                "Health": 3,
+                "At Home": 4,
+            }
+            term_1_marks = request.form["T1"]
+            guardian = request.form["G"]
+            guardian_dict = {"Mother": 0, "Father": 1, "Other": 2}
+            study_time = int(request.form["ST"])
+            exam_fails = int(request.form["EF"])
+            school_support = request.form["SS"]
+            school_support_dict = {"Yes": 0, "No": 1}
+            family_support = request.form["FSS"]
+            family_support_dict = {"No": 0, "Yes": 1}
+            extra_classes = request.form["EC"]
+            extra_classes_dict = {"No": 0, "Yes": 1}
+            extra_activites = request.form["EA"]
+            extra_activites_dict = {"No": 0, "Yes": 1}
+            internet_access = request.form["IA"]
+            internet_access_dict = {"No": 0, "Yes": 1}
+            go_out = request.form["GO"]
+            go_out_dict = {"Not Alot": 1, "Alot": 5}
+            health = request.form["H"]
+            health_dict = {"Bad": 1, "Good": 5}
+            absent_days = request.form["AD"]
+            array = np.array([[
+                int(gender),
+                int(age),
+                int(family_size_dict[family_size]),
+                int(mothers_education_dict[mothers_education]),
+                int(fathers_education_dict[fathers_education]),
+                int(mothers_job_dict[mothers_job]),
+                int(fathers_job_dict[fathers_job]),
+                int(guardian_dict[guardian]),
+                int(study_time),
+                int(exam_fails),
+                int(school_support_dict[school_support]),
+                int(family_support_dict[family_support]),
+                int(extra_classes_dict[extra_classes]),
+                int(extra_activites_dict[extra_activites]),
+                int(internet_access_dict[internet_access]),
+                int(go_out_dict[go_out]),
+                int(health_dict[health]),
+                int(absent_days),
+                int(term_1_marks),
+            ]])
+            array = array.reshape(1, -1)
+            model = pickle.load(
+                open(
+                    "./ML/student-mark-predictions-1/2nd_term_test_predictions_model.pkl",
+                    "rb",
+                ))
+            result = model.predict(array)
+            print("*" * 100)
+            print(result)
+            print("*" * 100)
+            flash(
+                f"2nd Term Marks : {result[0][0]} | 3rd Term Marks : {result[0][1]}",
+                "success",
+            )
+            return redirect("/Admin")
+        else:
+            return render_template("/admin/marks_predictions_t2.html",
+                                   page="Marks")
 
 
 @app.route(
@@ -1711,96 +1700,95 @@ def predicting_marks_t3():
         "Role" in session,
         "Returned Data" in session,
     ]
-    if all(conditions):
-        if session["Role"] == "Admin":
-            if request.method == "POST":
-                gender = request.form["Ge"]
-                gender_dict = {"Female": 0, "Male": 1}
-                gender = gender_dict[gender]
-                age = int(request.form["A"])
-                family_size = request.form["FS"]
-                family_size_dict = {"Less Than 3": 1, "Bigger Than 3": 0}
-                mothers_education = request.form["ME"]
-                mothers_education_dict = {"None": 0, "Higher Education": 4}
-                fathers_education = request.form["FE"]
-                fathers_education_dict = {"None": 0, "Higher Education": 4}
-                mothers_job = request.form["MJ"]
-                mothers_job_dict = {
-                    "At Home": 0,
-                    "Health": 1,
-                    "Other": 2,
-                    "Services": 3,
-                    "Teachers": 4,
-                }
-                fathers_job = request.form["FJ"]
-                fathers_job_dict = {
-                    "Teachers": 0,
-                    "Other": 1,
-                    "Services": 2,
-                    "Health": 3,
-                    "At Home": 4,
-                }
-                term_1_marks = request.form["T1"]
-                term_2_marks = request.form["T2"]
-                guardian = request.form["G"]
-                guardian_dict = {"Mother": 0, "Father": 1, "Other": 2}
-                study_time = int(request.form["ST"])
-                exam_fails = int(request.form["EF"])
-                school_support = request.form["SS"]
-                school_support_dict = {"Yes": 0, "No": 1}
-                family_support = request.form["FSS"]
-                family_support_dict = {"No": 0, "Yes": 1}
-                extra_classes = request.form["EC"]
-                extra_classes_dict = {"No": 0, "Yes": 1}
-                extra_activites = request.form["EA"]
-                extra_activites_dict = {"No": 0, "Yes": 1}
-                internet_access = request.form["IA"]
-                internet_access_dict = {"No": 0, "Yes": 1}
-                go_out = request.form["GO"]
-                go_out_dict = {"Not Alot": 1, "Alot": 5}
-                health = request.form["H"]
-                health_dict = {"Bad": 1, "Good": 5}
-                absent_days = request.form["AD"]
-                array = np.array([[
-                    int(gender),
-                    int(age),
-                    int(family_size_dict[family_size]),
-                    int(mothers_education_dict[mothers_education]),
-                    int(fathers_education_dict[fathers_education]),
-                    int(mothers_job_dict[mothers_job]),
-                    int(fathers_job_dict[fathers_job]),
-                    int(guardian_dict[guardian]),
-                    int(study_time),
-                    int(exam_fails),
-                    int(school_support_dict[school_support]),
-                    int(family_support_dict[family_support]),
-                    int(extra_classes_dict[extra_classes]),
-                    int(extra_activites_dict[extra_activites]),
-                    int(internet_access_dict[internet_access]),
-                    int(go_out_dict[go_out]),
-                    int(health_dict[health]),
-                    int(absent_days),
-                    int(term_1_marks),
-                    int(term_2_marks),
-                ]])
-                array = array.reshape(1, -1)
-                model = pickle.load(
-                    open(
-                        "./ML/student-mark-predictions-1/3rd_term_test_predictions_model.pkl",
-                        "rb",
-                    ))
-                result = model.predict(array)
-                print("*" * 100)
-                print(result)
-                print("*" * 100)
-                flash(
-                    f"3rd Term Marks : {result[0][0]}",
-                    "success",
-                )
-                return redirect("/Admin")
-            else:
-                return render_template("/admin/marks_predictions_t3.html",
-                                       page="Marks")
+    if all(conditions) and session["Role"] == "Admin":
+        if request.method == "POST":
+            gender = request.form["Ge"]
+            gender_dict = {"Female": 0, "Male": 1}
+            gender = gender_dict[gender]
+            age = int(request.form["A"])
+            family_size = request.form["FS"]
+            family_size_dict = {"Less Than 3": 1, "Bigger Than 3": 0}
+            mothers_education = request.form["ME"]
+            mothers_education_dict = {"None": 0, "Higher Education": 4}
+            fathers_education = request.form["FE"]
+            fathers_education_dict = {"None": 0, "Higher Education": 4}
+            mothers_job = request.form["MJ"]
+            mothers_job_dict = {
+                "At Home": 0,
+                "Health": 1,
+                "Other": 2,
+                "Services": 3,
+                "Teachers": 4,
+            }
+            fathers_job = request.form["FJ"]
+            fathers_job_dict = {
+                "Teachers": 0,
+                "Other": 1,
+                "Services": 2,
+                "Health": 3,
+                "At Home": 4,
+            }
+            term_1_marks = request.form["T1"]
+            term_2_marks = request.form["T2"]
+            guardian = request.form["G"]
+            guardian_dict = {"Mother": 0, "Father": 1, "Other": 2}
+            study_time = int(request.form["ST"])
+            exam_fails = int(request.form["EF"])
+            school_support = request.form["SS"]
+            school_support_dict = {"Yes": 0, "No": 1}
+            family_support = request.form["FSS"]
+            family_support_dict = {"No": 0, "Yes": 1}
+            extra_classes = request.form["EC"]
+            extra_classes_dict = {"No": 0, "Yes": 1}
+            extra_activites = request.form["EA"]
+            extra_activites_dict = {"No": 0, "Yes": 1}
+            internet_access = request.form["IA"]
+            internet_access_dict = {"No": 0, "Yes": 1}
+            go_out = request.form["GO"]
+            go_out_dict = {"Not Alot": 1, "Alot": 5}
+            health = request.form["H"]
+            health_dict = {"Bad": 1, "Good": 5}
+            absent_days = request.form["AD"]
+            array = np.array([[
+                int(gender),
+                int(age),
+                int(family_size_dict[family_size]),
+                int(mothers_education_dict[mothers_education]),
+                int(fathers_education_dict[fathers_education]),
+                int(mothers_job_dict[mothers_job]),
+                int(fathers_job_dict[fathers_job]),
+                int(guardian_dict[guardian]),
+                int(study_time),
+                int(exam_fails),
+                int(school_support_dict[school_support]),
+                int(family_support_dict[family_support]),
+                int(extra_classes_dict[extra_classes]),
+                int(extra_activites_dict[extra_activites]),
+                int(internet_access_dict[internet_access]),
+                int(go_out_dict[go_out]),
+                int(health_dict[health]),
+                int(absent_days),
+                int(term_1_marks),
+                int(term_2_marks),
+            ]])
+            array = array.reshape(1, -1)
+            model = pickle.load(
+                open(
+                    "./ML/student-mark-predictions-1/3rd_term_test_predictions_model.pkl",
+                    "rb",
+                ))
+            result = model.predict(array)
+            print("*" * 100)
+            print(result)
+            print("*" * 100)
+            flash(
+                f"3rd Term Marks : {result[0][0]}",
+                "success",
+            )
+            return redirect("/Admin")
+        else:
+            return render_template("/admin/marks_predictions_t3.html",
+                                   page="Marks")
 
 
 @app.route(
@@ -1819,7 +1807,5 @@ def predicting_marks():
         "Role" in session,
         "Returned Data" in session,
     ]
-    if all(conditions):
-        if session["Role"] == "Admin":
-            return render_template("/admin/marks_predictions.html",
-                                   page="Marks")
+    if all(conditions) and session["Role"] == "Admin":
+        return render_template("/admin/marks_predictions.html", page="Marks")
