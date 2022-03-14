@@ -1,26 +1,7 @@
 version = 1
 
 [[analyzers]]
-name = "ansible"
-enabled = true
-
-[[analyzers]]
 name = "terraform"
-enabled = true
-
-[[analyzers]]
-name = "docker"
-enabled = true
-
-  [analyzers.meta]
-  dockerfile_paths = ["/docker"]
-
-[[analyzers]]
-name = "sql"
-enabled = true
-
-[[analyzers]]
-name = "secrets"
 enabled = true
 
 [[analyzers]]
@@ -32,18 +13,19 @@ name = "shell"
 enabled = true
 
 [[analyzers]]
+name = "sql"
+enabled = true
+
+[[analyzers]]
+name = "secrets"
+enabled = true
+
+[[analyzers]]
 name = "javascript"
 enabled = true
 
   [analyzers.meta]
-  plugins = [
-    "react",
-    "meteor",
-    "ember",
-    "vue",
-    "angular",
-    "angularjs"
-  ]
+  plugins = ["react"]
 
 [[analyzers]]
 name = "python"
@@ -51,6 +33,18 @@ enabled = true
 
   [analyzers.meta]
   runtime_version = "3.x.x"
+
+[[transformers]]
+name = "prettier"
+enabled = true
+
+[[transformers]]
+name = "standardjs"
+enabled = true
+
+[[transformers]]
+name = "autopep8"
+enabled = true
 
 [[transformers]]
 name = "yapf"
@@ -62,16 +56,4 @@ enabled = true
 
 [[transformers]]
 name = "isort"
-enabled = true
-
-[[transformers]]
-name = "autopep8"
-enabled = true
-
-[[transformers]]
-name = "prettier"
-enabled = true
-
-[[transformers]]
-name = "standardjs"
 enabled = true
