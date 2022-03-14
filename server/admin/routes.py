@@ -1472,7 +1472,7 @@ def chat_admin_delete(_id):
     if all(conditions) and session["Role"] == "Admin":
         s = Stream(message="", user_name="", role="")
         result = s.delete(_id, session["Role"])
-        if result != True:
+        if result is not True:
             return redirect("/Admin/Log/Out")
         flash("Deleted successfuly", "success")
         return redirect("/Admin/Chat/")
