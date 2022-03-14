@@ -1,15 +1,15 @@
-{% extends '/admin/base.html' %}
-{% block head %}
+{% extends '/admin/base.html' %} {% block head %}
 <title>Admin Delete {{ info['User Name'] }}</title>
-{% endblock %}
-{% block body %}
+{% endblock %} {% block body %}
 <div class="container">
-    <div class="jumbotron">
+  <div class="jumbotron">
     <form action="" method="POST">
-        <h1>Info - User Name : {{ info['User Name'] }}</h1>
-        <h2>This user will be deleted and the user cant be retrived ! </h2>
-        <button type="submit" class="btn btn-danger"><b> Delete (<i> {{info['User Name']}} User </i>) </b></button>
+      <h1>Info - User Name : {{ info['User Name'] }}</h1>
+      <h2>This user will be deleted and the user cant be retrived !</h2>
+      <button type="submit" class="btn btn-danger">
+        <b> Delete (<i> {{info['User Name']}} User </i>) </b>
+      </button>
     </form>
-</div>
+  </div>
 </div>
 {% endblock %}

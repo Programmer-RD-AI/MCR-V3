@@ -1,44 +1,47 @@
-{% extends '/admin/base.html' %}
-{% block head %}
+{% extends '/admin/base.html' %} {% block head %}
 <title>Admin Home</title>
 <style>
-    .card {
-        display: inline-block !important;
-    }
-    .jumbotron.form {
-        color: black !important;
-        background-image: linear-gradient(to top, gray 0% lightgray 100%) !important;
-        width: 750px;
-        padding-bottom: 10px !important;
-        padding-top: 10px !important;
-        height: 350px !important;
-        margin: 7em auto !important;
-        border-radius: 2.5rem !important;
-        align-items: center !important;
-        box-shadow: 25px 15px 50px 2.5px rgba(0, 0, 0, 0.14) !important;
-    }
+  .card {
+    display: inline-block !important;
+  }
+  .jumbotron.form {
+    color: black !important;
+    background-image: linear-gradient(
+      to top,
+      gray 0% lightgray 100%
+    ) !important;
+    width: 750px;
+    padding-bottom: 10px !important;
+    padding-top: 10px !important;
+    height: 350px !important;
+    margin: 7em auto !important;
+    border-radius: 2.5rem !important;
+    align-items: center !important;
+    box-shadow: 25px 15px 50px 2.5px rgba(0, 0, 0, 0.14) !important;
+  }
 
-    .container.form {
-        padding-right: 2000px !important;
-        padding-left: -500px !important;
-        padding-top: 5px !important;
-        padding-bottom: 5px !important;
-    }
+  .container.form {
+    padding-right: 2000px !important;
+    padding-left: -500px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
 </style>
-{% endblock %}
-{% block body %}
-    {% for result in results %}
-    <div class="jumbotron form">
-        <h4><b> Id : {{result['_id']}} </b></h4>
-        <h4><b> User Name : {{result['User Name']}} </b></h4>
-        <h4><b> Password : {{result['Password']}} </b></h4>
-        <h4><b> Email : {{result['Email']}} </b></h4>
-        <h4><b> Whatsapp Number : {{result['Whatsapp Number']}} </b></h4>
-        <br>
-        <a href="/Admin/RDA/Register/Admit/{{result['_id']}}" class="btn btn-success">Admit</a>
-        <br>
-        <br>
-        <a href="/Admin/RDA/Register/Reject/{{result['_id']}}" class="btn btn-danger">Reject</a>
-    </div>
-    {% endfor %}
-{% endblock %}
+{% endblock %} {% block body %} {% for result in results %}
+<div class="jumbotron form">
+  <h4><b> Id : {{result['_id']}} </b></h4>
+  <h4><b> User Name : {{result['User Name']}} </b></h4>
+  <h4><b> Password : {{result['Password']}} </b></h4>
+  <h4><b> Email : {{result['Email']}} </b></h4>
+  <h4><b> Whatsapp Number : {{result['Whatsapp Number']}} </b></h4>
+  <br />
+  <a href="/Admin/RDA/Register/Admit/{{result['_id']}}" class="btn btn-success"
+    >Admit</a
+  >
+  <br />
+  <br />
+  <a href="/Admin/RDA/Register/Reject/{{result['_id']}}" class="btn btn-danger"
+    >Reject</a
+  >
+</div>
+{% endfor %} {% endblock %}

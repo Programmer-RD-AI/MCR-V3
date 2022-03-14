@@ -9,6 +9,7 @@ subject_db = cluster["Subjects"]
 
 
 class Teacher:
+
     def __init__(self, user_name, password, email, subject, whatsapp_number):
         try:
             self.user_name = user_name
@@ -185,6 +186,7 @@ class Teacher:
 
 
 class Students:
+
     def __init__(self, user_name, password, email, whatsapp_number):
         try:
             self.user_name = user_name

@@ -5,6 +5,7 @@ subject_db = cluster["Subjects"]
 
 
 class Subjects:
+
     def __init__(self, subject):
         try:
             self.collection = subject_db[subject]

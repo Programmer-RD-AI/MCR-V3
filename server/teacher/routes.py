@@ -1,6 +1,7 @@
 from server import *
 from server.db.notices import *
 
+
 @app.route("/Teacher")
 @app.route("/Teacher/")
 def teacher():
@@ -19,8 +20,9 @@ def teacher():
     except:
         return abort(505)
 
-@app.route('/Teacher/Log/Out')
-@app.route('/Teacher/Log/Out/')
+
+@app.route("/Teacher/Log/Out")
+@app.route("/Teacher/Log/Out/")
 def teacher_log_out():
     try:
         pop = ["Auth", "User Name", "Password", "Role", "Returned Data"]

@@ -1,162 +1,204 @@
-{% extends '/admin/base.html' %}
-{% block head %}
+{% extends '/admin/base.html' %} {% block head %}
 <title>Admin Home</title>
 <style>
-    .card {
-        display: inline-block !important;
-    }
+  .card {
+    display: inline-block !important;
+  }
 </style>
-{% endblock %}
-{% block body %}
+{% endblock %} {% block body %}
 <div class="container jombotron">
-    <form method="POST">
-        <div class="form-group">
-            <label for="Ge"> Gender </label>
-            <select id="Ge" name="Ge" class="form-control" required>
-                <option selected>Choose</option>
-                <option>Male</option>
-                <option>Female</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="A">Age</label>
-            <input required name="A" placeholder="A" type="number" class="form-control" id="A">
-        </div>
-        <div class="form-group">
-            <label for="T1">Term 1 Marks</label>
-            <input required name="T1" placeholder="T1" type="number" class="form-control" id="A">
-        </div>
-        <div class="form-group">
-            <label for="T2">Term 2 Marks</label>
-            <input required name="T2" placeholder="T2" type="number" class="form-control" id="A">
-        </div>
-        <div class="form-group">
-            <label for="FS"> Family Size </label>
-            <select id="FS" name="FS" class="form-control" required>
-                <option selected>Choose</option>
-                <option>Less Than 3</option>
-                <option>Bigger Than 3</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="ME"> Mothers Education </label>
-            <select id="ME" name="ME" class="form-control" required>
-                <option selected>Choose</option>
-                <option>None</option>
-                <option>Higher Education</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="FE"> Fathers Education </label>
-            <select id="FE" name="FE" class="form-control" required>
-                <option selected>Choose</option>
-                <option>None</option>
-                <option>Higher Education</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="MJ"> Mothers Job </label>
-            <select id="MJ" name="MJ" class="form-control" required>
-                <option selected>Choose</option>
-                <option>At Home</option>
-                <option>Health</option>
-                <option>Services</option>
-                <option>Teachers</option>
-                <option>Other</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="FJ"> Fathers Job </label>
-            <select id="FJ" name="FJ" class="form-control" required>
-                <option selected>Choose</option>
-                <option>At Home</option>
-                <option>Health</option>
-                <option>Services</option>
-                <option>Teachers</option>
-                <option>Other</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="G"> Guardian </label>
-            <select id="G" name="G" class="form-control" required>
-                <option selected>Choose</option>
-                <option>Father</option>
-                <option>Mother</option>
-                <option>Other</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="ST">StudyTime (Hours per week)</label>
-            <input required name="ST" placeholder="ST" type="number" class="form-control" id="A">
-        </div>
-        <div class="form-group">
-            <label for="AD">Absent Days</label>
-            <input required name="AD" placeholder="AD" type="number" class="form-control" id="A">
-        </div>
-        <div class="form-group">
-            <label for="EF">Exam Fails</label>
-            <input required name="EF" placeholder="EF" type="number" class="form-control" id="A">
-        </div>
-        <div class="form-group">
-            <label for="SS"> School_Support (Does the school the student ?) </label>
-            <select id="SS" name="SS" class="form-control" required>
-                <option selected>Choose</option>
-                <option>Yes</option>
-                <option>No</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="FSS"> Family_Support (Does the Family the student (studies) ?) </label>
-            <select id="FSS" name="FSS" class="form-control" required>
-                <option selected>Choose</option>
-                <option>Yes</option>
-                <option>No</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="EC"> Extra_Classes </label>
-            <select id="EC" name="EC" class="form-control" required>
-                <option selected>Choose</option>
-                <option>Yes</option>
-                <option>No</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="EA"> Extra_Activites (Sports) </label>
-            <select id="EA" name="EA" class="form-control" required>
-                <option selected>Choose</option>
-                <option>Yes</option>
-                <option>No</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="IA"> Internet_Access </label>
-            <select id="IA" name="IA" class="form-control" required>
-                <option selected>Choose</option>
-                <option>Yes</option>
-                <option>No</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="GO"> Go Out </label>
-            <select id="GO" name="GO" class="form-control" required>
-                <option selected>Choose</option>
-                <option>Not Alot</option>
-                <option>Alot</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="H"> Health </label>
-            <select id="H" name="H" class="form-control" required>
-                <option selected>Choose</option>
-                <option>Bad</option>
-                <option>Good</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Predict</button>
-    </form>
-    <br>
-    <br>
-    <br>
+  <form method="POST">
+    <div class="form-group">
+      <label for="Ge"> Gender </label>
+      <select id="Ge" name="Ge" class="form-control" required>
+        <option selected>Choose</option>
+        <option>Male</option>
+        <option>Female</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="A">Age</label>
+      <input
+        required
+        name="A"
+        placeholder="A"
+        type="number"
+        class="form-control"
+        id="A"
+      />
+    </div>
+    <div class="form-group">
+      <label for="T1">Term 1 Marks</label>
+      <input
+        required
+        name="T1"
+        placeholder="T1"
+        type="number"
+        class="form-control"
+        id="A"
+      />
+    </div>
+    <div class="form-group">
+      <label for="T2">Term 2 Marks</label>
+      <input
+        required
+        name="T2"
+        placeholder="T2"
+        type="number"
+        class="form-control"
+        id="A"
+      />
+    </div>
+    <div class="form-group">
+      <label for="FS"> Family Size </label>
+      <select id="FS" name="FS" class="form-control" required>
+        <option selected>Choose</option>
+        <option>Less Than 3</option>
+        <option>Bigger Than 3</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="ME"> Mothers Education </label>
+      <select id="ME" name="ME" class="form-control" required>
+        <option selected>Choose</option>
+        <option>None</option>
+        <option>Higher Education</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="FE"> Fathers Education </label>
+      <select id="FE" name="FE" class="form-control" required>
+        <option selected>Choose</option>
+        <option>None</option>
+        <option>Higher Education</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="MJ"> Mothers Job </label>
+      <select id="MJ" name="MJ" class="form-control" required>
+        <option selected>Choose</option>
+        <option>At Home</option>
+        <option>Health</option>
+        <option>Services</option>
+        <option>Teachers</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="FJ"> Fathers Job </label>
+      <select id="FJ" name="FJ" class="form-control" required>
+        <option selected>Choose</option>
+        <option>At Home</option>
+        <option>Health</option>
+        <option>Services</option>
+        <option>Teachers</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="G"> Guardian </label>
+      <select id="G" name="G" class="form-control" required>
+        <option selected>Choose</option>
+        <option>Father</option>
+        <option>Mother</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="ST">StudyTime (Hours per week)</label>
+      <input
+        required
+        name="ST"
+        placeholder="ST"
+        type="number"
+        class="form-control"
+        id="A"
+      />
+    </div>
+    <div class="form-group">
+      <label for="AD">Absent Days</label>
+      <input
+        required
+        name="AD"
+        placeholder="AD"
+        type="number"
+        class="form-control"
+        id="A"
+      />
+    </div>
+    <div class="form-group">
+      <label for="EF">Exam Fails</label>
+      <input
+        required
+        name="EF"
+        placeholder="EF"
+        type="number"
+        class="form-control"
+        id="A"
+      />
+    </div>
+    <div class="form-group">
+      <label for="SS"> School_Support (Does the school the student ?) </label>
+      <select id="SS" name="SS" class="form-control" required>
+        <option selected>Choose</option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="FSS">
+        Family_Support (Does the Family the student (studies) ?)
+      </label>
+      <select id="FSS" name="FSS" class="form-control" required>
+        <option selected>Choose</option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="EC"> Extra_Classes </label>
+      <select id="EC" name="EC" class="form-control" required>
+        <option selected>Choose</option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="EA"> Extra_Activites (Sports) </label>
+      <select id="EA" name="EA" class="form-control" required>
+        <option selected>Choose</option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="IA"> Internet_Access </label>
+      <select id="IA" name="IA" class="form-control" required>
+        <option selected>Choose</option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="GO"> Go Out </label>
+      <select id="GO" name="GO" class="form-control" required>
+        <option selected>Choose</option>
+        <option>Not Alot</option>
+        <option>Alot</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="H"> Health </label>
+      <select id="H" name="H" class="form-control" required>
+        <option selected>Choose</option>
+        <option>Bad</option>
+        <option>Good</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Predict</button>
+  </form>
+  <br />
+  <br />
+  <br />
 </div>
 {% endblock %}

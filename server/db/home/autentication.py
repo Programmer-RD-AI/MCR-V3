@@ -6,6 +6,7 @@ auth_collection_sign_in = auth_db["Auth-Sign-In"]
 
 
 class Sign_In:
+
     def __init__(self, user_name, password_or_email, role) -> None:
         self.user_name = user_name
         self.password_or_email = password_or_email
@@ -51,6 +52,7 @@ class Sign_In:
 
 
 class Register:
+
     def __init__(self, user_name, password, whatsapp_number, email):
         self.user_name = user_name
         self.password = password

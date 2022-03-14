@@ -1,8 +1,11 @@
-from server import *
 from datetime import datetime
+
 from mongodb.get_the_last_id import *
+from server import *
+
 
 class Stream:
+
     def __init__(self, message, user_name, role):
         self.message = message
         self.user_name = user_name
@@ -14,22 +17,20 @@ class Stream:
 
     def add(self):
         _id = get_custom_last_id(db="Stream", collection="Stream")
-        self.collection.insert_one(
-            {
-                "_id": _id,
-                "Message": self.message,
-                "Role": self.role,
-                "User Name": self.user_name,
-                "time": datetime.now(),
-            }
-        )
+        self.collection.insert_one({
+            "_id": _id,
+            "Message": self.message,
+            "Role": self.role,
+            "User Name": self.user_name,
+            "time": datetime.now(),
+        })
         return True
 
-    def delete(self, _id,user_name):
+    def delete(self, _id, user_name):
         results = []
-        for result in self.collection.find({'_id':int(_id)}):
+        for result in self.collection.find({"_id": int(_id)}):
             results.append(result)
-        if results[0]['Role'] != user_name:
+        if results[0]["Role"] != user_name:
             return False
         self.collection.delete_one(results[0])
         print(results)

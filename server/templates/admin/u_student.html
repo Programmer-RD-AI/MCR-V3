@@ -1,51 +1,77 @@
-{% extends '/admin/base.html' %}
-{% block head %}
+{% extends '/admin/base.html' %} {% block head %}
 <title>Admin Update Student</title>
-{% endblock %}
-{% block body %}
+{% endblock %} {% block body %}
 <div class="container">
-    <div class="jumbotron">
-        <br>
-        <form method="POST">
-            <div class="form-group">
-                <label for="user_name">User Name</label>
-                <input required name="UN" value="{{ user_name }}" placeholder="User Name" type="text"
-                    class="form-control" id="user_name">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input required name="P" value="{{ password }}" placeholder="Password" type="password"
-                    class="form-control" id="password">
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input required name="E" value="{{ email }}" placeholder="Email" type="email" class="form-control"
-                    id="email">
-            </div>
-            <div class="form-group">
-                <label for="inputState">Role</label>
-                <select id="inputState" name="R" class="form-control">
-                    <option>None</option>
-                    <option selected>Student</option>
-                    <option>Teacher</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="inputState">Subjects</label>
-                <select id="inputState" name="S" class="form-control">
-                    <option selected>None</option>
-                    {% for subject in subjects %}
-                    <option>{{ subject }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="Whatapp Number">Whatapp Number</label>
-                <input required name="WAN" value="{{ whatsapp_number }}" placeholder="Whatapp Number" type="number"
-                    class="form-control" id="Whatapp Number">
-            </div>
-            <button type="submit" class="btn btn-primary">Update Student</button>
-        </form>
-    </div>
+  <div class="jumbotron">
+    <br />
+    <form method="POST">
+      <div class="form-group">
+        <label for="user_name">User Name</label>
+        <input
+          required
+          name="UN"
+          value="{{ user_name }}"
+          placeholder="User Name"
+          type="text"
+          class="form-control"
+          id="user_name"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          required
+          name="P"
+          value="{{ password }}"
+          placeholder="Password"
+          type="password"
+          class="form-control"
+          id="password"
+        />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          required
+          name="E"
+          value="{{ email }}"
+          placeholder="Email"
+          type="email"
+          class="form-control"
+          id="email"
+        />
+      </div>
+      <div class="form-group">
+        <label for="inputState">Role</label>
+        <select id="inputState" name="R" class="form-control">
+          <option>None</option>
+          <option selected>Student</option>
+          <option>Teacher</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="inputState">Subjects</label>
+        <select id="inputState" name="S" class="form-control">
+          <option selected>None</option>
+          {% for subject in subjects %}
+          <option>{{ subject }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="Whatapp Number">Whatapp Number</label>
+        <input
+          required
+          name="WAN"
+          value="{{ whatsapp_number }}"
+          placeholder="Whatapp Number"
+          type="number"
+          class="form-control"
+          id="Whatapp Number"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Update Student</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

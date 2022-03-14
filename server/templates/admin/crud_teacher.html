@@ -1,83 +1,135 @@
-{% extends '/admin/base.html' %}
-{% block head %}
+{% extends '/admin/base.html' %} {% block head %}
 <title>Admin Crud Students</title>
 <style>
-    .jumbotron.form {
-        color: black !important;
-        background-image: linear-gradient(to top, gray 0% lightgray 100%) !important;
-        width: 1750px;
-        padding-bottom: 50px !important;
-        padding-top: 12.5px !important;
-        height: 750px;
-        margin: 7em auto;
-        border-radius: 1.5em;
-        box-shadow: 25px 15px 50px 2.5px rgba(0, 0, 0, 0.14);
-    }
+  .jumbotron.form {
+    color: black !important;
+    background-image: linear-gradient(
+      to top,
+      gray 0% lightgray 100%
+    ) !important;
+    width: 1750px;
+    padding-bottom: 50px !important;
+    padding-top: 12.5px !important;
+    height: 750px;
+    margin: 7em auto;
+    border-radius: 1.5em;
+    box-shadow: 25px 15px 50px 2.5px rgba(0, 0, 0, 0.14);
+  }
 
-    .container.form {
-        padding-right: 2500px !important;
-        padding-left: 55px !important;
-    }
+  .container.form {
+    padding-right: 2500px !important;
+    padding-left: 55px !important;
+  }
 </style>
-{% endblock %}
-{% block body %}
+{% endblock %} {% block body %}
 <div class="container form">
-    <div class="jumbotron form">
-        <br>
-        <form method="POST">
-            <div class="form-group">
-                <label for="user_name">User Name</label>
-                <input required name="UN" placeholder="User Name" type="text" class="form-control" id="user_name">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input required name="P" placeholder="Password" type="password" class="form-control" id="password">
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input required name="E" placeholder="Email" type="email" class="form-control" id="email">
-            </div>
-            <div class="form-group">
-                <label for="WAN">whatsapp_number</label>
-                <input required name="WAN" placeholder="Whatsapp Number" type="number" class="form-control" id="WAN">
-            </div>
-            <div class="form-group">
-                <label for="inputState">Subject</label>
-                <select name="S" id="inputState" class="form-control">
-                    <option selected>None</option>
-                    {% for subject in subjects %}
-                    <option>{{ subject }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Add Teacher</button>
-        </form>
-        <br>
-        <br>
-        <div class="jumbotron"
-            style="background-color:gray !important; overflow: scroll !important; width:1700px !important; height:420px !important">
-            {% for teacher in teachers %}
-            <br>
-            <div style="background-color: lightgray !important; border-radius:12.5px !important;" class="container">
-                <h1> <br> User Name : {{ teacher[0]['User Name'] }} <br> Password : {{ teacher[0]['Password'] }}
-                    <br>
-                    Email : {{ teacher[0]['Email'] }} <br> Subject : {{ teacher[0]['Subject'] }} <br> Whatsapp Number :
-                    {{ teacher[0]['Whatsapp Number'] }}
-                </h1>
-                <br>
-                <a href="/Admin/CRUD/Teacher/Update/{{ teacher[-1]['User Name'] }}/{{ teacher[-1]['Email'] }}"
-                    class="btn btn-primary">Update</a>
-                <br>
-                <br>
-                <a href="/Admin/CRUD/Teacher/Delete/{{ teacher[-1]['User Name'] }}/{{ teacher[-1]['Email'] }}"
-                    class="btn btn-danger">Delete</a>
-                <br>
-                <br>
-            </div>
-            <br>
-            {% endfor %}
-        </div>
-        <a href="/Admin/CRUD/Students" class="btn btn-primary">Create Student(s)</a>
+  <div class="jumbotron form">
+    <br />
+    <form method="POST">
+      <div class="form-group">
+        <label for="user_name">User Name</label>
+        <input
+          required
+          name="UN"
+          placeholder="User Name"
+          type="text"
+          class="form-control"
+          id="user_name"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          required
+          name="P"
+          placeholder="Password"
+          type="password"
+          class="form-control"
+          id="password"
+        />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          required
+          name="E"
+          placeholder="Email"
+          type="email"
+          class="form-control"
+          id="email"
+        />
+      </div>
+      <div class="form-group">
+        <label for="WAN">whatsapp_number</label>
+        <input
+          required
+          name="WAN"
+          placeholder="Whatsapp Number"
+          type="number"
+          class="form-control"
+          id="WAN"
+        />
+      </div>
+      <div class="form-group">
+        <label for="inputState">Subject</label>
+        <select name="S" id="inputState" class="form-control">
+          <option selected>None</option>
+          {% for subject in subjects %}
+          <option>{{ subject }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Teacher</button>
+    </form>
+    <br />
+    <br />
+    <div
+      class="jumbotron"
+      style="
+        background-color: gray !important;
+        overflow: scroll !important;
+        width: 1700px !important;
+        height: 420px !important;
+      "
+    >
+      {% for teacher in teachers %}
+      <br />
+      <div
+        style="
+          background-color: lightgray !important;
+          border-radius: 12.5px !important;
+        "
+        class="container"
+      >
+        <h1>
+          <br />
+          User Name : {{ teacher[0]['User Name'] }} <br />
+          Password : {{ teacher[0]['Password'] }}
+          <br />
+          Email : {{ teacher[0]['Email'] }} <br />
+          Subject : {{ teacher[0]['Subject'] }} <br />
+          Whatsapp Number : {{ teacher[0]['Whatsapp Number'] }}
+        </h1>
+        <br />
+        <a
+          href="/Admin/CRUD/Teacher/Update/{{ teacher[-1]['User Name'] }}/{{ teacher[-1]['Email'] }}"
+          class="btn btn-primary"
+          >Update</a
+        >
+        <br />
+        <br />
+        <a
+          href="/Admin/CRUD/Teacher/Delete/{{ teacher[-1]['User Name'] }}/{{ teacher[-1]['Email'] }}"
+          class="btn btn-danger"
+          >Delete</a
+        >
+        <br />
+        <br />
+      </div>
+      <br />
+      {% endfor %}
     </div>
+    <a href="/Admin/CRUD/Students" class="btn btn-primary">Create Student(s)</a>
+  </div>
 </div>
 {% endblock %}

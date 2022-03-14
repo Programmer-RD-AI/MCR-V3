@@ -1,17 +1,19 @@
-from server import *
 from mongodb.get_the_last_id import *
+from server import *
+
 db = cluster["Notices"]
 collection = db["Notices"]
 
 
 def add_notice(title, description):
-    collection.insert_one(
-        {
-            "_id": get_custom_last_id(db="Notices", collection="Notices"),
-            "Title": title,
-            "Description": description,
-        }
-    )
+    collection.insert_one({
+        "_id":
+        get_custom_last_id(db="Notices", collection="Notices"),
+        "Title":
+        title,
+        "Description":
+        description,
+    })
     return True
 
 
