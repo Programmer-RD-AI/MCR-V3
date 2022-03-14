@@ -5,6 +5,7 @@ from server import *
 
 
 class SMS:
+
     def __init__(self, phone_numbers, message):
         self.phone_numbers = phone_numbers
         self.message = message
