@@ -1286,9 +1286,7 @@ def file_type_delete_file(file_type, filename, desc):
         return abort(404)
     if all(conditions) and session["Role"] == "Admin":
         f = File_Admin(file="", description=desc)
-        f.delete(description=desc,
-                 filename=filename,
-                 file_type_name=file_type)
+        f.delete(description=desc, filename=filename, file_type_name=file_type)
         flash("File Deleted Successfuly", "success")
         return redirect(f"/Admin/File/{file_type}")
     return abort(404)
@@ -1371,11 +1369,8 @@ def setting_admin():
         "Role" in session,
         "Returned Data" in session,
     ]
-    if (
-        all(conditions)
-        and session["Role"] == "Admin"
-        and session["Settings ?"] is True
-    ):
+    if all(conditions
+           ) and session["Role"] == "Admin" and session["Settings ?"] is True:
         if request.method == "POST":
             new_user_name = request.form["NUN"]
             new_password = request.form["NP"]
@@ -1813,5 +1808,4 @@ def predicting_marks():
         "Returned Data" in session,
     ]
     if all(conditions) and session["Role"] == "Admin":
-        return render_template("/admin/marks_predictions.html",
-                               page="Marks")
+        return render_template("/admin/marks_predictions.html", page="Marks")
