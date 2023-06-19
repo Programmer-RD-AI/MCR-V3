@@ -24,7 +24,7 @@ requests==2.25.1
 scikit-learn==0.24.2
 scipy==1.6.0
 seaborn==0.11.2
-six==1.15.0
+six==1.16.0
 sklearn==0.0
 threadpoolctl==2.1.0
 urllib3==1.26.9
